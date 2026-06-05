@@ -1,11 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import {ref} from 'vue'
+
+const url = 'http://localhost:8000/api/data/daily/country';
+const data = ref([]);
+fetch(url)
+    .then(response => response.json())
+    .then(responseData => {
+      data.value = responseData;
+    });
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <h1>Fuel prices</h1>
+  <p>{{ data }}</p>
 </template>
 
 <style scoped></style>
