@@ -1,16 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-} from 'chart.js'
-import { Line } from 'vue-chartjs'
+import {ref} from 'vue'
+import {CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip} from 'chart.js'
+import {Line} from 'vue-chartjs'
 
 ChartJS.register(
     CategoryScale,
@@ -22,36 +13,57 @@ ChartJS.register(
     Legend
 );
 
-const data = ref({
-  labels: ['One', 'Two', 'Three', 'Four'],
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: [1, 2, 3, 4],
-    },
-    {
-      label: 'Dataset 2',
-      data: [1.2, 2.2, 3.3, 4.4]
-    }
-  ]
+let fuelTypes = ref([]);
+
+const chartData = ref({
+  labels: [],
+  datasets: []
 });
 
-const options = {
+const chartOptions = {
   responsive: true,
-  maintainAspectRatio: false
+  maintainAspectRatio: true
 };
 
-const url = 'http://localhost:8000/api/data/daily/country';
-fetch(url)
+const fuelTypesUrl = 'http://localhost:8000/api/fuelTypes';
+fetch(fuelTypesUrl)
     .then(response => response.json())
-    .then(responseData => {
-      console.log(responseData);
+    .then(responseData => { fuelTypes.value = responseData })
+    .then(function() {
+      const dailyCountryUrl = 'http://localhost:8000/api/data/daily/country';
+      fetch(dailyCountryUrl)
+          .then(response => response.json())
+          .then(responseData => {
+            const result = {};
+            for (const fuelType of fuelTypes.value) {
+              result[fuelType.name] = [];
+            }
+            for (const fuelData of responseData) {
+              for (const [fuelType, fuelTypeValue] of Object.entries(result)) {
+                fuelTypeValue.unshift(fuelData.data.find((e) => e['fuel_type'] === fuelType)?.price);
+              }
+            }
+            const labels = responseData.map(function (item) { return item.date; }).reverse();
+            const datasets = Object.entries(result).map(function ([fuelType, data]) {
+              return {
+                label: fuelType,
+                data: data
+              }
+            })
+
+            chartData.value = {
+              labels: labels,
+              datasets: datasets
+            }
+          });
     });
 </script>
 
 <template>
   <h1>Fuel prices</h1>
-  <p><Line :data="data" :options="options" /></p>
+  <p>
+    <Line :data="chartData" :options="chartOptions"/>
+  </p>
 </template>
 
 <style scoped></style>
