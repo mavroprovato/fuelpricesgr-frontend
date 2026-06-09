@@ -5,7 +5,33 @@ import {Line} from 'vue-chartjs'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-let fuelTypes = ref([]);
+const fuelTypes: any = {
+  'UNLEADED_95': {
+    description: 'Αμόλυβδη 95',
+    color: '#003d5c'
+  },
+  'UNLEADED_100': {
+    description: 'Αμόλυβδη 100',
+    color: '#464c89'
+  },
+  'SUPER': {
+    description: 'Super',
+    color: '#954e9b'
+  },
+  'DIESEL': {
+    description: 'Diesel',
+    color: '#dd4d88'
+  },
+  'DIESEL_HEATING': {
+    description: 'Diesel Θέρμανσης',
+    color: '#ff6b59'
+  },
+  'GAS': {
+    description: 'Υγραέριο',
+    color: '#ffa600'
+  }
+};
+
 
 const chartData = ref({
   labels: [],
@@ -23,38 +49,39 @@ const chartOptions = {
         display: false
       }
     },
+  },
+  plugins: {
+    legend: {
+      position: 'right'
+    }
   }
 };
 
-const fuelTypesUrl = 'http://localhost:8000/api/fuelTypes';
-fetch(fuelTypesUrl)
+const dailyCountryUrl = 'http://localhost:8000/api/data/daily/country';
+fetch(dailyCountryUrl)
     .then(response => response.json())
     .then(responseData => {
-      fuelTypes.value = responseData
-    })
-    .then(function () {
-      const dailyCountryUrl = 'http://localhost:8000/api/data/daily/country';
-      fetch(dailyCountryUrl)
-          .then(response => response.json())
-          .then(responseData => {
-            const result = {};
-            for (const fuelType of fuelTypes.value) {
-              result[fuelType.name] = [];
-            }
-            for (const fuelData of responseData) {
-              for (const [fuelType, fuelTypeValue] of Object.entries(result)) {
-                fuelTypeValue.unshift(fuelData.data.find((e) => e['fuel_type'] === fuelType)?.price);
-              }
-            }
-            const labels = responseData.map(item => item.date).reverse();
-            // console.log(fuelTypes.value);
-            const datasets = Object.entries(result).map(([fuelType, data]) => ({
-              label: fuelTypes.value.find((e) => e['name'] === fuelType)?.description,
-              data: data
-            }))
-            chartData.value = {labels: labels, datasets: datasets}
-          });
+      const result: any = {};
+      for (const fuelType of Object.keys(fuelTypes)) {
+        result[fuelType] = [];
+      }
+      for (const fuelData of responseData) {
+        for (const [fuelType, fuelTypeValue] of Object.entries(result)) {
+          fuelTypeValue.unshift(fuelData.data.find((e) => e['fuel_type'] === fuelType)?.price);
+        }
+      }
+      const labels = responseData.map(item => item.date).reverse();
+      const datasets = Object.entries(result).map(function ([fuelType, data]) {
+        return {
+          label: fuelTypes[fuelType].description,
+          data: data,
+          backgroundColor: fuelTypes[fuelType].color,
+          borderColor: fuelTypes[fuelType].color
+        };
+      })
+      chartData.value = {labels: labels, datasets: datasets}
     });
+
 </script>
 
 <template>
