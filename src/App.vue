@@ -47,7 +47,11 @@ fetch(fuelTypesUrl)
               }
             }
             const labels = responseData.map(item => item.date).reverse();
-            const datasets = Object.entries(result).map(([fuelType, data]) => ({label: fuelType, data: data}))
+            // console.log(fuelTypes.value);
+            const datasets = Object.entries(result).map(([fuelType, data]) => ({
+              label: fuelTypes.value.find((e) => e['name'] === fuelType)?.description,
+              data: data
+            }))
             chartData.value = {labels: labels, datasets: datasets}
           });
     });
