@@ -32,7 +32,6 @@ const fuelTypes: any = {
   }
 };
 
-
 const chartData = ref({
   labels: [],
   datasets: []
@@ -57,7 +56,7 @@ const chartOptions = {
   }
 };
 
-const dailyCountryUrl = 'http://localhost:8000/api/data/daily/country';
+const dailyCountryUrl = `${import.meta.env.VITE_API_BASE}data/daily/country`;
 fetch(dailyCountryUrl)
     .then(response => response.json())
     .then(responseData => {
