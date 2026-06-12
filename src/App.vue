@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue'
+import {reactive, ref} from 'vue'
 import {CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip} from 'chart.js'
 import {Line} from 'vue-chartjs'
 
@@ -77,7 +77,7 @@ API.dailyCountryData().then(data => {
       backgroundColor: fuelTypes[fuelType].color,
       borderColor: fuelTypes[fuelType].color
     };
-  })
+  });
   chartData.value = {labels: dates, datasets: datasets}
 });
 
