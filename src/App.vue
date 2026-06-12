@@ -3,6 +3,8 @@ import {ref} from 'vue'
 import {CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip} from 'chart.js'
 import {Line} from 'vue-chartjs'
 
+import {API} from './api.ts'
+
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const fuelTypes: any = {
@@ -56,30 +58,27 @@ const chartOptions = {
   }
 };
 
-const dailyCountryUrl = `${import.meta.env.VITE_API_BASE}data/daily/country`;
-fetch(dailyCountryUrl)
-    .then(response => response.json())
-    .then(responseData => {
-      const result: any = {};
-      for (const fuelType of Object.keys(fuelTypes)) {
-        result[fuelType] = [];
-      }
-      for (const fuelData of responseData) {
-        for (const [fuelType, fuelTypeValue] of Object.entries(result)) {
-          fuelTypeValue.unshift(fuelData.data.find((e) => e['fuel_type'] === fuelType)?.price);
-        }
-      }
-      const labels = responseData.map(item => item.date).reverse();
-      const datasets = Object.entries(result).map(function ([fuelType, data]) {
-        return {
-          label: fuelTypes[fuelType].description,
-          data: data,
-          backgroundColor: fuelTypes[fuelType].color,
-          borderColor: fuelTypes[fuelType].color
-        };
-      })
-      chartData.value = {labels: labels, datasets: datasets}
-    });
+API.dailyCountryData().then(data => {
+  const result: any = {};
+  for (const fuelType of Object.keys(fuelTypes)) {
+    result[fuelType] = [];
+  }
+  for (const fuelData of data) {
+    for (const [fuelType, fuelTypeValue] of Object.entries(result)) {
+      fuelTypeValue.unshift(fuelData.data.find((e) => e['fuel_type'] === fuelType)?.price);
+    }
+  }
+  const labels = data.map(item => item.date).reverse();
+  const datasets = Object.entries(result).map(function ([fuelType, data]) {
+    return {
+      label: fuelTypes[fuelType].description,
+      data: data,
+      backgroundColor: fuelTypes[fuelType].color,
+      borderColor: fuelTypes[fuelType].color
+    };
+  })
+  chartData.value = {labels: labels, datasets: datasets}
+});
 
 </script>
 
