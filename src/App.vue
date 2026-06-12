@@ -39,7 +39,7 @@ const chartData = ref({
   datasets: []
 });
 
-const chartOptions = {
+const chartOptions = ref({
   responsive: true,
   maintainAspectRatio: false,
   pointStyle: false,
@@ -56,28 +56,29 @@ const chartOptions = {
       position: 'right'
     }
   }
-};
+});
 
 API.dailyCountryData().then(data => {
-  const result: any = {};
-  for (const fuelType of Object.keys(fuelTypes)) {
-    result[fuelType] = [];
-  }
+  const dates: Date[] = [];
+  const fuelTypePrices: Map<string, (string | undefined)[]> = new Map();
   for (const fuelData of data) {
-    for (const [fuelType, fuelTypeValue] of Object.entries(result)) {
-      fuelTypeValue.unshift(fuelData.data.find((e) => e['fuel_type'] === fuelType)?.price);
+    dates.unshift(fuelData.date);
+    for (const fuelType of Object.keys(fuelTypes)) {
+      const price = fuelData.data.find((e) => e.fuel_type === fuelType)?.price;
+      const data = fuelTypePrices.get(fuelType) || [];
+      data.unshift(price)
+      fuelTypePrices.set(fuelType, data);
     }
   }
-  const labels = data.map(item => item.date).reverse();
-  const datasets = Object.entries(result).map(function ([fuelType, data]) {
+  const datasets = Object.keys(fuelTypes).map(function (fuelType: string) {
     return {
       label: fuelTypes[fuelType].description,
-      data: data,
+      data: fuelTypePrices.get(fuelType),
       backgroundColor: fuelTypes[fuelType].color,
       borderColor: fuelTypes[fuelType].color
     };
   })
-  chartData.value = {labels: labels, datasets: datasets}
+  chartData.value = {labels: dates, datasets: datasets}
 });
 
 </script>
