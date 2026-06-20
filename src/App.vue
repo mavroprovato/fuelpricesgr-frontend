@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import {ref} from 'vue'
-import {CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale} from 'chart.js'
-import {Line} from 'vue-chartjs'
+import { ref } from 'vue'
+import {
+  CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale
+} from 'chart.js'
+import { Line } from 'vue-chartjs'
 import 'chartjs-adapter-moment';
 
-import {API} from './api.ts'
+import { API } from './api.ts'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
