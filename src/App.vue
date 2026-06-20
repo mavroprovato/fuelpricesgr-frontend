@@ -4,10 +4,12 @@ import {
   CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
-import 'chartjs-adapter-moment';
 import { VueDatePicker } from '@vuepic/vue-datepicker';
+
+import 'chartjs-adapter-moment';
 import '@vuepic/vue-datepicker/dist/main.css'
-import { API } from './api.ts'
+
+import { API } from './services/api.ts'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
