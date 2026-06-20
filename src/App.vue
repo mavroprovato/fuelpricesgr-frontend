@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {ref} from 'vue'
-import {CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip} from 'chart.js'
+import {CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale} from 'chart.js'
 import {Line} from 'vue-chartjs'
+import 'chartjs-adapter-moment';
 
 import {API} from './api.ts'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
 const fuelTypes: any = {
   'UNLEADED_95': {
@@ -46,12 +47,17 @@ const chartOptions = ref({
   spanGaps: true,
   scales: {
     x: {
+      type: 'time',
       grid: {
         display: false
       }
     },
   },
   plugins: {
+    title: {
+      text: 'Daily Country Data',
+      display: true
+    },
     legend: {
       position: 'right'
     }
@@ -85,9 +91,14 @@ API.dailyCountryData().then(data => {
 
 <template>
   <h1>Fuel prices</h1>
-  <div style="height:600px;">
+  <div class="chart">
     <Line :data="chartData" :options="chartOptions"/>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+  .chart {
+    height: 600px;
+    width: 80%;
+  }
+</style>
