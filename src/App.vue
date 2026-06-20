@@ -5,10 +5,13 @@ import {
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
 import 'chartjs-adapter-moment';
-
+import { VueDatePicker } from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 import { API } from './api.ts'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
+
+const dates = ref();
 
 const fuelTypes: any = {
   'UNLEADED_95': {
@@ -93,6 +96,9 @@ API.dailyCountryData().then(data => {
 
 <template>
   <h1>Fuel prices</h1>
+  <div>
+    <VueDatePicker v-model="dates" range multi-calendars :time-config="{ enableTimePicker: false }"></VueDatePicker>
+  </div>
   <div class="chart">
     <Line :data="chartData" :options="chartOptions"/>
   </div>
