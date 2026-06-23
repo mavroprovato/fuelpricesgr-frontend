@@ -1,6 +1,6 @@
-interface DateRange {
-    startDate: Date;
-    endDate: Date;
+export interface DateRange {
+    startDate: Date | null;
+    endDate: Date | null;
 }
 
 interface FuelData {
@@ -25,8 +25,8 @@ export class API {
             const data = await response.json();
 
             return {
-                startDate: new Date(Date.parse(data.start_date)),
-                endDate: new Date(Date.parse(data.end_date))
+                startDate: data.start_date ? new Date(Date.parse(data.start_date)) : null,
+                endDate: data.end_date ? new Date(Date.parse(data.end_date)) : null
             }
         });
     }

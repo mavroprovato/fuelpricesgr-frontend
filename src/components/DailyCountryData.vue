@@ -10,11 +10,10 @@ import {API} from "@/services/api.ts";
 import 'chartjs-adapter-moment';
 import '@vuepic/vue-datepicker/dist/main.css'
 
-
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
-const props = defineProps(['dates'])
+const props = defineProps(['selectedDates'])
 
 const fuelTypes: any = {
   'UNLEADED_95': {
@@ -73,7 +72,7 @@ const chartData = ref({
 });
 
 watch(props, async () => {
-  const [startDate, endDate] = props.dates;
+  const [startDate, endDate] = props.selectedDates;
   API.dailyCountryData(startDate, endDate).then(data => {
     const labels: string[] = [];
     const fuelTypePrices: Map<string, (string | undefined)[]> = new Map();
