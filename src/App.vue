@@ -85,7 +85,6 @@ onMounted(() => {
 });
 
 watch(dates, async ([startDate, endDate]) => {
-  console.log(startDate, endDate);
   API.dailyCountryData(startDate, endDate).then(data => {
     const labels: string[] = [];
     const fuelTypePrices: Map<string, (string | undefined)[]> = new Map();
