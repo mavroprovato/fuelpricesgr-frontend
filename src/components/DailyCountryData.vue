@@ -7,9 +7,6 @@ import {
 
 import {API} from "@/services/api.ts";
 
-import 'chartjs-adapter-moment';
-import '@vuepic/vue-datepicker/dist/main.css'
-
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
