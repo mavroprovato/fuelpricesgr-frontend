@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {VueDatePicker} from '@vuepic/vue-datepicker';
 import {API} from "@/services/api.ts";
 import 'chartjs-adapter-moment';
 import {Line} from 'vue-chartjs'
 import '@vuepic/vue-datepicker/dist/main.css'
-
 import {
   CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale
 } from 'chart.js'
-
+// Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
+const dateRange = ref({
+  minDate: null,
+  maxDate: null,
+});
 const dates = ref();
-const minDate = ref();
-const maxDate = ref();
 
 const chartOptions = ref({
   responsive: true,
@@ -72,16 +73,20 @@ const fuelTypes: any = {
   }
 };
 
+// Get the available date range when the component is mounted
 onMounted(() => {
   API.dateRange('daily_country').then(data => {
-    const startDate = new Date(Date.parse(data.end_date));
+    // Set the date range for the date picker
+    dateRange.value = { minDate: data.startDate, maxDate: data.endDate }
+    let startDate = new Date(data.endDate);
     startDate.setMonth(startDate.getMonth() - 3);
-    dates.value = [startDate.toISOString(), data.end_date]
-    minDate.value = data.start_date;
-    maxDate.value = data.end_date;
+    dates.value = [startDate, data.endDate];
   });
+});
 
-  API.dailyCountryData().then(data => {
+watch(dates, async ([startDate, endDate]) => {
+  console.log(startDate, endDate);
+  API.dailyCountryData(startDate, endDate).then(data => {
     const labels: string[] = [];
     const fuelTypePrices: Map<string, (string | undefined)[]> = new Map();
     for (const fuelData of data) {
@@ -102,7 +107,7 @@ onMounted(() => {
       };
     });
 
-    chartData.value = { labels: labels, datasets: datasets }
+    chartData.value = {labels: labels, datasets: datasets}
   });
 });
 </script>
@@ -110,7 +115,7 @@ onMounted(() => {
 <template>
   <h1>Fuel prices</h1>
   <div>
-    <VueDatePicker v-model="dates" range multi-calendars :min-date="minDate" :max-date="maxDate"
+    <VueDatePicker v-model="dates" range multi-calendars :min-date="dateRange.minDate" :max-date="dateRange.maxDate"
                    :time-config="{enableTimePicker: false}" :formats="{ input: 'MMM dd yyyy' }"/>
   </div>
   <div class="chart">
