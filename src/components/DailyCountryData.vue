@@ -12,7 +12,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const props = defineProps(['selectedDates'])
 
-const chartOptions = ref({
+const chartOptions: any = ref({
   responsive: true,
   maintainAspectRatio: false,
   pointStyle: false,
@@ -49,7 +49,13 @@ const chartData = ref<CartData>({
 watch(props, async () => {
   const [startDate, endDate] = props.selectedDates;
   API.dailyCountryData(startDate, endDate).then(data => {
-    const datasets: any = Array.from(data.data, function ([fuelType, data]) {
+    const fuelTypeData = data.data;
+    fuelTypeData.forEach((value, key) => {
+      if (value.filter(function(el) { return el; }).length == 0) {
+        fuelTypeData.delete(key);
+      }
+    });
+    const datasets: any = Array.from(fuelTypeData, function ([fuelType, data]) {
       return {
         label: fuelType, data: data.map(e => { return e?.price })
       };
