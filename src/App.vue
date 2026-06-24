@@ -5,6 +5,8 @@ import {API} from './services/api.ts';
 import type {DateRange} from './services/api.ts';
 import DailyCountryData from './components/DailyCountryData.vue';
 
+const fuelTypes = ref<Map<string, string>>();
+
 /** The date range for the date picker */
 const dateRange = ref<DateRange>({
   startDate: null,
@@ -15,6 +17,9 @@ const selectedDates = ref<[Date, Date] | []>([]);
 
 /** Called when the component is mounted. Gets the date range for the date picker and the default dates to display */
 onMounted(() => {
+  API.fuelTypes().then(data => {
+    fuelTypes.value = data;
+  });
   API.dateRange('daily_country').then(data => {
     // Set the date range for the date picker
     dateRange.value = { startDate: data.startDate, endDate: data.endDate }
@@ -34,7 +39,7 @@ onMounted(() => {
                    :max-date="dateRange.endDate || ''" :time-config="{enableTimePicker: false}"
                    :formats="{ input: 'MMM dd yyyy' }"/>
   </div>
-  <DailyCountryData :selectedDates="selectedDates"/>
+  <DailyCountryData :selectedDates="selectedDates" :fuelTypes="fuelTypes" />
 </template>
 
 <style scoped>

@@ -10,7 +10,7 @@ import {API} from "@/services/api.ts";
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Colors);
 
-const props = defineProps(['selectedDates'])
+const props = defineProps(['selectedDates', 'fuelTypes'])
 
 const chartOptions: any = ref({
   responsive: true,
@@ -48,6 +48,9 @@ const chartData = ref<CartData>({
 
 watch(props, async () => {
   const [startDate, endDate] = props.selectedDates;
+  if (!startDate || !endDate) {
+    return;
+  }
   API.dailyCountryData(startDate, endDate).then(data => {
     const fuelTypeData = data.data;
     fuelTypeData.forEach((value, key) => {
@@ -57,7 +60,7 @@ watch(props, async () => {
     });
     const datasets: any = Array.from(fuelTypeData, function ([fuelType, data]) {
       return {
-        label: fuelType, data: data.map(e => { return e?.price })
+        label: props.fuelTypes.get(fuelType), data: data.map(e => { return e?.price })
       };
     });
 

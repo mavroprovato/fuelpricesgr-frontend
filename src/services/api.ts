@@ -3,6 +3,11 @@ export interface DateRange {
     endDate: Date | null;
 }
 
+interface FuelTypesResponseEntry {
+    name: string;
+    description: string;
+}
+
 interface FuelData {
     price: number;
     numberOfStations: number;
@@ -17,6 +22,19 @@ interface DailyCountryData {
 export class API {
     static API_BASE: string = import.meta.env.VITE_API_BASE;
     static FUEL_TYPES: string[] = ['UNLEADED_95', 'UNLEADED_100', 'SUPER', 'DIESEL', 'DIESEL_HEATING', 'GAS'];
+
+    static async fuelTypes(): Promise<Map<string, string>> {
+        const url = new URL('fuelTypes', API.API_BASE);
+
+        return await fetch(url).then(async function (response: Response) {
+            const data = await response.json();
+            return data.reduce(function (map: Map<string, string>, value: FuelTypesResponseEntry) {
+                map.set(value.name, value.description);
+
+                return map;
+            }, new Map<string, string>());
+        });
+    }
 
     static async dateRange(fuelType: string): Promise<DateRange> {
         const url = new URL(`dateRange/${fuelType}`, API.API_BASE);
