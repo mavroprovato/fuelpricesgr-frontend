@@ -4,19 +4,19 @@ export interface DateRange {
 }
 
 interface FuelData {
-    fuel_type: string;
-    price: string;
-    number_of_stations: number;
+    price: number;
+    numberOfStations: number;
 }
 
 interface DailyCountryData {
-    date: string;
-    data: FuelData[];
-    data_file: string;
+    dates: Date[];
+    dataFiles: string[];
+    data: Map<string, (FuelData | null)[]>;
 }
 
 export class API {
     static API_BASE: string = import.meta.env.VITE_API_BASE;
+    static FUEL_TYPES: string[] = ['UNLEADED_95', 'UNLEADED_100', 'SUPER', 'DIESEL', 'DIESEL_HEATING', 'GAS'];
 
     static async dateRange(fuelType: string): Promise<DateRange> {
         const url = new URL(`dateRange/${fuelType}`, API.API_BASE);
@@ -31,7 +31,7 @@ export class API {
         });
     }
 
-    static async dailyCountryData(startDate: Date | undefined, endDate: Date | undefined): Promise<DailyCountryData[]> {
+    static async dailyCountryData(startDate: Date | undefined, endDate: Date | undefined): Promise<DailyCountryData> {
         const url = new URL('data/daily/country', API.API_BASE);
         if (startDate) {
             url.searchParams.append('start_date', API.toISODateString(startDate));
@@ -40,7 +40,31 @@ export class API {
             url.searchParams.append('end_date', API.toISODateString(endDate));
         }
 
-        return await fetch(url).then((response: Response): Promise<any> => response.json());
+        return await fetch(url).then(async function (response: Response): Promise<DailyCountryData> {
+            const data = await response.json();
+
+            const dates: Date[] = [];
+            const dataFiles: string[] = [];
+            const dataPerFuelType: Map<string, (FuelData | null)[]> = new Map();
+            for (const fuelData of data) {
+                dates.unshift(fuelData.date);
+                dataFiles.unshift(fuelData.data_file);
+                for (const fuelType of API.FUEL_TYPES) {
+                    const fuelTypeData = fuelData.data.find((e: any) => e.fuel_type === fuelType);
+                    const perFuelTypeData = dataPerFuelType.get(fuelType) || [];
+                    if (fuelTypeData) {
+                        perFuelTypeData.unshift({
+                            price: fuelTypeData.price, numberOfStations: fuelTypeData.number_of_stations
+                        });
+                    } else {
+                        perFuelTypeData.unshift(null);
+                    }
+                    dataPerFuelType.set(fuelType, perFuelTypeData);
+                }
+            }
+
+            return {dates: dates, dataFiles: dataFiles, data: dataPerFuelType};
+        });
     }
 
     static toISODateString(date: Date): string {
