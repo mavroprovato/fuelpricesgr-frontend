@@ -6,11 +6,12 @@ import {
 } from 'chart.js'
 
 import {API} from "@/services/api.ts";
+import {Constants} from "@/services/constants.ts";
 
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Colors);
 
-const props = defineProps(['selectedDates', 'fuelTypes'])
+const props = defineProps(['selectedDates']);
 
 const chartOptions: any = ref({
   responsive: true,
@@ -50,13 +51,17 @@ watch(props, async () => {
   API.dailyCountryData(startDate, endDate).then(data => {
     const fuelTypeData = data.data;
     fuelTypeData.forEach((value, key) => {
-      if (value.filter(function(el) { return el; }).length == 0) {
+      if (value.filter(function (el) {
+        return el;
+      }).length == 0) {
         fuelTypeData.delete(key);
       }
     });
     const datasets: any = Array.from(fuelTypeData, function ([fuelType, data]) {
       return {
-        label: props.fuelTypes.get(fuelType), data: data.map(e => { return e?.price })
+        label: Constants.FUEL_TYPES[fuelType], data: data.map(e => {
+          return e?.price
+        })
       };
     });
 
@@ -66,7 +71,6 @@ watch(props, async () => {
 </script>
 
 <template>
-  <h2>Daily Country Data</h2>
   <div class="chart">
     <Line :data="chartData" :options="chartOptions"/>
   </div>
@@ -74,7 +78,7 @@ watch(props, async () => {
 
 <style scoped>
 .chart {
-  height: 600px;
+  height: 400px;
   width: 80%;
 }
 </style>
