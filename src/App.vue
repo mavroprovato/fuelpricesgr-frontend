@@ -39,7 +39,9 @@ onMounted(() => {
                    :max-date="dateRange.endDate || ''" :time-config="{enableTimePicker: false}"
                    :formats="{ input: 'MMM dd yyyy' }"/>
   </div>
-  <DailyCountryData :selectedDates="selectedDates" :fuelTypes="fuelTypes" />
+  <div>
+    <DailyCountryData :selectedDates="selectedDates" :fuelTypes="fuelTypes" />
+  </div>
 </template>
 
 <style scoped>

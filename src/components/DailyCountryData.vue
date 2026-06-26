@@ -26,10 +26,6 @@ const chartOptions: any = ref({
     },
   },
   plugins: {
-    title: {
-      text: 'Daily Country Data',
-      display: true
-    },
     legend: {
       position: 'right'
     }
@@ -70,6 +66,7 @@ watch(props, async () => {
 </script>
 
 <template>
+  <h2>Daily Country Data</h2>
   <div class="chart">
     <Line :data="chartData" :options="chartOptions"/>
   </div>
