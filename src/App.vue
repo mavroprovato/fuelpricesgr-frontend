@@ -4,6 +4,7 @@ import {VueDatePicker} from '@vuepic/vue-datepicker';
 import {API} from './services/api.ts';
 import type {DateRange} from './services/api.ts';
 import DailyCountryData from './components/DailyCountryData.vue';
+import DailyPrefectureData from './components/DatePrefectureData.vue';
 
 /** The date range for the date picker */
 const dateRange = ref<DateRange>({
@@ -35,15 +36,15 @@ onMounted(() => {
                    :formats="{ input: 'MMM dd yyyy' }"/>
   </div>
   <h2>Daily Country Data</h2>
-  <div class="center">
+  <div>
     <DailyCountryData :selectedDates="selectedDates" />
+  </div>
+  <h2>Daily Prefecture Data</h2>
+  <div>
+    <DailyPrefectureData :date="selectedDates[1]" />
   </div>
 </template>
 
 <style scoped>
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 </style>

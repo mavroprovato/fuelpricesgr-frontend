@@ -19,6 +19,12 @@ interface DailyCountryData {
     data: Map<string, (FuelData | null)[]>;
 }
 
+interface DailyPrefectureData {
+    dates: Date[];
+    dataFiles: string[];
+    data: Map<string, (FuelData | null)[]>;
+}
+
 export class API {
     static API_BASE: string = import.meta.env.VITE_API_BASE;
     static FUEL_TYPES: string[] = ['UNLEADED_95', 'UNLEADED_100', 'SUPER', 'DIESEL', 'DIESEL_HEATING', 'GAS'];
@@ -82,6 +88,20 @@ export class API {
             }
 
             return {dates: dates, dataFiles: dataFiles, data: dataPerFuelType};
+        });
+    }
+
+    static async dailyPrefectureData(startDate: Date | undefined, endDate: Date | undefined): Promise<DailyPrefectureData> {
+        const url = new URL('data/daily/prefecture', API.API_BASE);
+        if (startDate) {
+            url.searchParams.append('start_date', API.toISODateString(startDate));
+        }
+        if (endDate) {
+            url.searchParams.append('end_date', API.toISODateString(endDate));
+        }
+
+        return await fetch(url).then(async function (response: Response) {
+            return await response.json();
         });
     }
 
