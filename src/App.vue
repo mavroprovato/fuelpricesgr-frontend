@@ -39,10 +39,6 @@ onMounted(() => {
   <div>
     <DailyCountryData :selectedDates="selectedDates" />
   </div>
-  <h2>Daily Prefecture Data</h2>
-  <div>
-    <DailyPrefectureData :date="selectedDates[1]" />
-  </div>
 </template>
 
 <style scoped>
