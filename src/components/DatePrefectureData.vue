@@ -7,7 +7,7 @@ const props = defineProps(['date']);
 watch(props, async () => {
   const [startDate, endDate] = [props.date, props.date];
   API.dailyPrefectureData(startDate, endDate).then(data => {
-    console.log(data);
+    // console.log(data);
   });
 });
 </script>

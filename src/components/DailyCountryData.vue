@@ -5,7 +5,7 @@ import {
   CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale, Colors
 } from 'chart.js'
 
-import {API} from "@/services/api.ts";
+import {API, type CountryData, type DailyCountryData} from "@/services/api.ts";
 import {Constants} from "@/services/constants.ts";
 
 // Register ChartJS components
@@ -33,15 +33,53 @@ const chartOptions: any = ref({
   }
 });
 
-interface CartData {
+interface ChartData {
   labels: Date[];
   datasets: any[];
 }
 
-const chartData = ref<CartData>({
+const chartData = ref<ChartData>({
   labels: [],
   datasets: []
 });
+
+function getChartData(data: Array<DailyCountryData>): ChartData {
+  // Get the data per fuel type
+  const labels: Date[] = [];
+  const dataPerFuelType: Map<string, (any | null)[]> = new Map();
+  for (const dateData of data) {
+    labels.unshift(dateData.date);
+    for (const fuelType of Constants.fuelTypes()) {
+      const fuelTypeData = dateData.data.find((e: CountryData) => e.fuel_type === fuelType);
+      const perFuelTypeData = dataPerFuelType.get(fuelType) || [];
+      if (fuelTypeData) {
+        perFuelTypeData.unshift({
+          dataFile: dateData.data_file, price: fuelTypeData.price, numberOfStations: fuelTypeData.number_of_stations
+        });
+      } else {
+        perFuelTypeData.unshift(null);
+      }
+      dataPerFuelType.set(fuelType, perFuelTypeData);
+    }
+  }
+
+  // Remove fuel type data if they are empty
+  dataPerFuelType.forEach((value, key) => {
+    if (value.filter(function (el) { return el;}).length == 0) {
+      dataPerFuelType.delete(key);
+    }
+  });
+
+  return {
+    labels: labels,
+    datasets: Array.from(dataPerFuelType, function ([fuelType, data]) {
+      return {
+        label: Constants.fuelTypeDescription(fuelType),
+        data: data.map(e => { return e?.price })
+      };
+    })
+  };
+}
 
 watch(props, async () => {
   const [startDate, endDate] = props.selectedDates;
@@ -49,23 +87,7 @@ watch(props, async () => {
     return;
   }
   API.dailyCountryData(startDate, endDate).then(data => {
-    const fuelTypeData = data.data;
-    fuelTypeData.forEach((value, key) => {
-      if (value.filter(function (el) {
-        return el;
-      }).length == 0) {
-        fuelTypeData.delete(key);
-      }
-    });
-    const datasets: any = Array.from(fuelTypeData, function ([fuelType, data]) {
-      return {
-        label: Constants.FUEL_TYPES[fuelType], data: data.map(e => {
-          return e?.price
-        })
-      };
-    });
-
-    chartData.value = {labels: data.dates, datasets: datasets}
+    chartData.value = getChartData(data);
   });
 });
 </script>
