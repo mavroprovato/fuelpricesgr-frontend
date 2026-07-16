@@ -101,6 +101,6 @@ watch(props, async () => {
 <style scoped>
 .chart {
   height: 400px;
-  width: 80%;
+  width: 100%;
 }
 </style>

@@ -1,21 +1,66 @@
 <script setup lang="ts">
-import {watch} from "vue";
+import {ref, watch} from "vue";
 import {API} from "@/services/api.ts";
+import {Constants} from "@/services/constants.ts";
 
 const props = defineProps(['date']);
+
+const fuelTypes = ref();
+const prefectureData = ref();
 
 watch(props, async () => {
   const [startDate, endDate] = [props.date, props.date];
   API.dailyPrefectureData(startDate, endDate).then(data => {
-    // console.log(data);
+    const dataPerPrefecture = new Map();
+    const availableFuelTypes = new Set<string>();
+    for (const row of data[0]?.data || []) {
+      availableFuelTypes.add(row.fuel_type);
+      const perPrefectureData = dataPerPrefecture.get(row.prefecture) || [];
+      perPrefectureData.unshift({
+        fuelType: row.fuel_type, price: row.price
+      });
+      dataPerPrefecture.set(row.prefecture, perPrefectureData);
+    }
+    fuelTypes.value = availableFuelTypes;
+
+    const tableData = [];
+    for (const prefecture of Constants.prefectures()) {
+      const rowData: any = {name: prefecture};
+      for (const fuelType of availableFuelTypes) {
+        rowData[fuelType] = dataPerPrefecture.get(prefecture).find((e: any) => e.fuelType === fuelType)?.price
+      }
+      console.log(rowData);
+      tableData.push(rowData)
+    }
+    prefectureData.value = tableData;
   });
 });
 </script>
 
 <template>
-  <p>Date: {{ props.date }}</p>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Prefecture</th>
+        <th v-for="fuelType in fuelTypes">{{ Constants.fuelTypeDescription(fuelType) }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="data in prefectureData">
+        <td>{{ Constants.prefectureDescription(data.name) }}</td>
+        <td v-for="fuelType in fuelTypes">
+          {{ data[fuelType] }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <style scoped>
-
+table {
+  width:100%;
+}
+th {
+  text-align: left;
+}
 </style>

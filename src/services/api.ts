@@ -11,14 +11,20 @@ export interface DailyCountryData {
 
 export interface CountryData {
     fuel_type: string;
-    price: string;
+    price: number;
     number_of_stations: number | null;
+}
+
+export interface DailyPrefectureData {
+    date: Date;
+    data_file: string;
+    data: Array<PrefectureData>;
 }
 
 export interface PrefectureData {
     prefecture: string;
     fuel_type: string;
-    price: string;
+    price: number;
 }
 
 export class API {
@@ -55,7 +61,7 @@ export class API {
 
     static async dailyPrefectureData(
         startDate: Date | undefined, endDate: Date | undefined
-    ): Promise<Array<PrefectureData>> {
+    ): Promise<Array<DailyPrefectureData>> {
         const url = new URL('data/daily/prefecture', API.API_BASE);
         if (startDate) {
             url.searchParams.append('start_date', API.toISODateString(startDate));
