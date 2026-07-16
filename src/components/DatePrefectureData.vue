@@ -2,6 +2,7 @@
 import {ref, watch} from "vue";
 import {API} from "@/services/api.ts";
 import {Constants} from "@/services/constants.ts";
+import {Formatter} from "@/services/formatter.ts";
 
 const props = defineProps(['date']);
 
@@ -48,7 +49,7 @@ watch(props, async () => {
       <tr v-for="data in prefectureData">
         <td>{{ Constants.prefectureDescription(data.name) }}</td>
         <td v-for="fuelType in fuelTypes">
-          {{ data[fuelType] }}
+          {{ Formatter.currency(data[fuelType]) }}
         </td>
       </tr>
     </tbody>

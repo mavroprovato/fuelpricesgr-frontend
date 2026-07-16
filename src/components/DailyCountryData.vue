@@ -7,6 +7,7 @@ import {
 
 import {API, type CountryData, type DailyCountryData} from "@/services/api.ts";
 import {Constants} from "@/services/constants.ts";
+import {Formatter} from "@/services/formatter.ts";
 
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Colors);
@@ -23,6 +24,13 @@ const chartOptions: any = ref({
         display: false
       }
     },
+    y: {
+      ticks: {
+        callback: function(value: number) {
+          return Formatter.currency(value);
+        }
+      }
+    }
   },
   plugins: {
     legend: {
