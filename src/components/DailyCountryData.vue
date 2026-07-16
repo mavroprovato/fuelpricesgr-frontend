@@ -16,8 +16,6 @@ const props = defineProps(['selectedDates']);
 const chartOptions: any = ref({
   responsive: true,
   maintainAspectRatio: false,
-  pointStyle: false,
-  spanGaps: true,
   scales: {
     x: {
       type: 'time',

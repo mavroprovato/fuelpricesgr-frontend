@@ -5,6 +5,7 @@ import {API} from './services/api.ts';
 import type {DateRange} from './services/api.ts';
 import DailyCountryData from './components/DailyCountryData.vue';
 import DailyPrefectureData from './components/DatePrefectureData.vue';
+import { el } from "date-fns/locale"
 
 /** The date range for the date picker */
 const dateRange = ref<DateRange>({
@@ -29,17 +30,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Fuel prices</h1>
+  <h1>Τιμές Καυσίμων</h1>
   <div>
     <VueDatePicker v-model="selectedDates" range multi-calendars :min-date="dateRange.startDate || ''"
                    :max-date="dateRange.endDate || ''" :time-config="{enableTimePicker: false}"
-                   :formats="{ input: 'MMM dd yyyy' }"/>
+                   :locale="el" :formats="{ input: 'MMM dd yyyy' }"/>
   </div>
-  <h2>Country Data</h2>
+  <h2>Ημερήσια δεδομένα</h2>
   <div>
     <DailyCountryData :selectedDates="selectedDates" />
   </div>
-  <h2>Prefecture Data</h2>
+  <h2>Δεδομένα ανά νομό</h2>
   <div>
     <DailyPrefectureData :date="selectedDates[1]" />
   </div>

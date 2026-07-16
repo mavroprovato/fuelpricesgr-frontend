@@ -29,7 +29,6 @@ watch(props, async () => {
       for (const fuelType of availableFuelTypes) {
         rowData[fuelType] = dataPerPrefecture.get(prefecture).find((e: any) => e.fuelType === fuelType)?.price
       }
-      console.log(rowData);
       tableData.push(rowData)
     }
     prefectureData.value = tableData;
@@ -41,7 +40,7 @@ watch(props, async () => {
   <table>
     <thead>
       <tr>
-        <th scope="col">Prefecture</th>
+        <th scope="col">Νομός</th>
         <th v-for="fuelType in fuelTypes">{{ Constants.fuelTypeDescription(fuelType) }}</th>
       </tr>
     </thead>
