@@ -52,7 +52,7 @@ const chartOptions: any = ref({
     tooltip: {
       callbacks: {
         title: function (data: any): string {
-          return moment(data[0].label).format('D MMM YYYY');
+          return moment(new Date(data[0].label)).format('D MMM YYYY');
         }
       }
     }
