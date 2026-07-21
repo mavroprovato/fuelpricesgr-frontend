@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
+import moment from 'moment';
 import {API} from "@/services/api.ts";
 import {Constants} from "@/services/constants.ts";
 import {Formatter} from "@/services/formatter.ts";
@@ -38,6 +39,8 @@ watch(props, async () => {
 </script>
 
 <template>
+  <h2>Δεδομένα ανά νομό</h2>
+  <h3>Δεδομένα για {{ moment(date).format('D MMM YYYY') }}</h3>
   <table>
     <thead>
       <tr>

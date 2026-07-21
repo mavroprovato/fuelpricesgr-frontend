@@ -36,11 +36,9 @@ onMounted(() => {
                    :max-date="dateRange.endDate || ''" :time-config="{enableTimePicker: false}"
                    :locale="el" :formats="{ input: 'dd MMM yyyy' }"/>
   </div>
-  <h2>Ημερήσια δεδομένα</h2>
   <div>
     <DailyCountryData :selectedDates="selectedDates" />
   </div>
-  <h2>Δεδομένα ανά νομό</h2>
   <div>
     <DailyPrefectureData :date="selectedDates[1]" />
   </div>

@@ -16,10 +16,6 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const props = defineProps(['selectedDates']);
 
-function tooltip_title(data: any): string {
-  return moment(data[0].label).format('D MMM YYYY');
-}
-
 const chartOptions: any = ref({
   responsive: true,
   maintainAspectRatio: false,
@@ -55,7 +51,9 @@ const chartOptions: any = ref({
     },
     tooltip: {
       callbacks: {
-        title: tooltip_title
+        title: function (data: any): string {
+          return moment(data[0].label).format('D MMM YYYY');
+        }
       }
     }
   }
@@ -121,6 +119,7 @@ watch(props, async () => {
 </script>
 
 <template>
+  <h2>Ημερήσια δεδομένα</h2>
   <div class="chart">
     <Line :data="chartData" :options="chartOptions"/>
   </div>
