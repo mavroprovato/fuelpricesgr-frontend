@@ -17,6 +17,10 @@ const props = defineProps(['selectedDates']);
 const chartOptions: any = ref({
   responsive: true,
   maintainAspectRatio: false,
+  interaction: {
+    mode: 'index',
+    intersect: false,
+  },
   scales: {
     x: {
       type: 'time',
@@ -34,7 +38,7 @@ const chartOptions: any = ref({
   },
   plugins: {
     legend: {
-      position: 'right'
+      position: 'top'
     }
   }
 });
