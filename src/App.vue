@@ -34,7 +34,7 @@ onMounted(() => {
   <div>
     <VueDatePicker v-model="selectedDates" range multi-calendars :min-date="dateRange.startDate || ''"
                    :max-date="dateRange.endDate || ''" :time-config="{enableTimePicker: false}"
-                   :locale="el" :formats="{ input: 'MMM dd yyyy' }"/>
+                   :locale="el" :formats="{ input: 'dd MMM yyyy' }"/>
   </div>
   <h2>Ημερήσια δεδομένα</h2>
   <div>

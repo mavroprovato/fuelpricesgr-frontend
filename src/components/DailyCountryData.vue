@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import {ref, watch} from 'vue'
 import {Line} from 'vue-chartjs'
+import moment from 'moment';
 import {
   CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale, Colors
 } from 'chart.js'
+import 'chartjs-adapter-moment';
 
 import {API, type CountryData, type DailyCountryData} from "@/services/api.ts";
 import {Constants} from "@/services/constants.ts";
@@ -14,6 +16,10 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const props = defineProps(['selectedDates']);
 
+function tooltip_title(data: any): string {
+  return moment(data[0].label).format('D MMM YYYY');
+}
+
 const chartOptions: any = ref({
   responsive: true,
   maintainAspectRatio: false,
@@ -21,11 +27,18 @@ const chartOptions: any = ref({
     mode: 'index',
     intersect: false,
   },
+  locale: 'el-GR',
   scales: {
     x: {
       type: 'time',
       grid: {
         display: false
+      },
+      time: {
+        unit: 'day',
+        displayFormats: {
+          day: 'D MMM YYYY'
+        }
       }
     },
     y: {
@@ -39,6 +52,11 @@ const chartOptions: any = ref({
   plugins: {
     legend: {
       position: 'top'
+    },
+    tooltip: {
+      callbacks: {
+        title: tooltip_title
+      }
     }
   }
 });
