@@ -39,7 +39,7 @@ const chartOptions: any = ref({
     },
     y: {
       ticks: {
-        callback: function(value: number) {
+        callback: function (value: number) {
           return Formatter.currency(value);
         }
       }
@@ -91,7 +91,9 @@ function getChartData(data: Array<DailyCountryData>): ChartData {
 
   // Remove fuel type data if they are empty
   dataPerFuelType.forEach((value, key) => {
-    if (value.filter(function (el) { return el;}).length == 0) {
+    if (value.filter(function (el) {
+      return el;
+    }).length == 0) {
       dataPerFuelType.delete(key);
     }
   });

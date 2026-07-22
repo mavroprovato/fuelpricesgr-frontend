@@ -43,26 +43,27 @@ watch(props, async () => {
   <h3>Δεδομένα για {{ moment(date).format('D MMM YYYY') }}</h3>
   <table>
     <thead>
-      <tr>
-        <th scope="col">Νομός</th>
-        <th v-for="fuelType in fuelTypes">{{ Constants.fuelTypeDescription(fuelType) }}</th>
-      </tr>
+    <tr>
+      <th scope="col">Νομός</th>
+      <th v-for="fuelType in fuelTypes">{{ Constants.fuelTypeDescription(fuelType) }}</th>
+    </tr>
     </thead>
     <tbody>
-      <tr v-for="data in prefectureData">
-        <td>{{ Constants.prefectureDescription(data.name) }}</td>
-        <td v-for="fuelType in fuelTypes">
-          {{ Formatter.currency(data[fuelType]) }}
-        </td>
-      </tr>
+    <tr v-for="data in prefectureData">
+      <td>{{ Constants.prefectureDescription(data.name) }}</td>
+      <td v-for="fuelType in fuelTypes">
+        {{ Formatter.currency(data[fuelType]) }}
+      </td>
+    </tr>
     </tbody>
   </table>
 </template>
 
 <style scoped>
 table {
-  width:100%;
+  width: 100%;
 }
+
 th {
   text-align: left;
 }
