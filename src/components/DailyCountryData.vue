@@ -53,6 +53,9 @@ const chartOptions: any = ref({
       callbacks: {
         title: function (data: any): string {
           return moment(new Date(data[0].label)).format('D MMM YYYY');
+        },
+        label: function(data: any): string {
+          return `${data.dataset.label}: ${Formatter.currency(data.raw)}`;
         }
       }
     }
