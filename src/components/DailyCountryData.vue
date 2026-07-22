@@ -108,6 +108,7 @@ function getChartData(data: Array<DailyCountryData>): ChartData {
 }
 
 watch(props, async () => {
+  console.log("WATCH!")
   const [startDate, endDate] = props.selectedDates;
   if (!startDate || !endDate) {
     return;
