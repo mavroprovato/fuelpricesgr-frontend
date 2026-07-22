@@ -12,7 +12,7 @@ const prefectureData = ref();
 
 watch(props, async () => {
   const [startDate, endDate] = [props.date, props.date];
-  API.dailyPrefectureData(startDate, endDate).then(data => {
+  API.dailyPrefectureData(undefined, startDate, endDate).then(data => {
     const dataPerPrefecture = new Map();
     const availableFuelTypes = new Set<string>();
     for (const row of data[0]?.data || []) {

@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import DailyPrefectureChart from "@/components/DailyPrefectureChart.vue";
 
+defineProps(['dateRange']);
 </script>
 
 <template>
   <div>
-    Prefecture view: {{ $route.params.prefecture }}
+    <DailyPrefectureChart :dateRange="dateRange"/>
   </div>
 </template>

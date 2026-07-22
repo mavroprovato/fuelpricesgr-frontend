@@ -60,9 +60,12 @@ export class API {
     }
 
     static async dailyPrefectureData(
-        startDate: Date | undefined, endDate: Date | undefined
+        prefecture: string | undefined, startDate: Date | undefined, endDate: Date | undefined
     ): Promise<Array<DailyPrefectureData>> {
         const url = new URL('data/daily/prefecture', API.API_BASE);
+        if (prefecture) {
+            url.searchParams.append('prefecture', prefecture);
+        }
         if (startDate) {
             url.searchParams.append('start_date', API.toISODateString(startDate));
         }

@@ -1,18 +1,27 @@
 <script setup lang="ts">
+
 import {ref, watch} from 'vue'
+import {useRoute} from "vue-router";
 import {Line} from 'vue-chartjs'
 import moment from 'moment';
 import {
   CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale, Colors
 } from 'chart.js'
-import 'chartjs-adapter-moment';
 
-import {API, type CountryData, type DailyCountryData} from "@/services/api.ts";
+import 'chartjs-adapter-moment';
+import {
+  API,
+  type CountryData,
+  type DailyCountryData,
+  type DailyPrefectureData,
+  type PrefectureData
+} from "@/services/api.ts";
 import {Constants} from "@/services/constants.ts";
 import {Formatter} from "@/services/formatter.ts";
 
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Colors);
+const route = useRoute();
 
 const props = defineProps(['dateRange']);
 
@@ -72,18 +81,18 @@ const chartData = ref<ChartData>({
   datasets: []
 });
 
-function getChartData(data: Array<DailyCountryData>): ChartData {
+function getChartData (data: Array<DailyPrefectureData>): ChartData {
   // Get the data per fuel type
   const labels: Date[] = [];
   const dataPerFuelType: Map<string, (any | null)[]> = new Map();
   for (const dateData of data) {
     labels.unshift(dateData.date);
     for (const fuelType of Constants.fuelTypes()) {
-      const fuelTypeData = dateData.data.find((e: CountryData) => e.fuel_type === fuelType);
+      const fuelTypeData = dateData.data.find((e: PrefectureData) => e.fuel_type === fuelType);
       const perFuelTypeData = dataPerFuelType.get(fuelType) || [];
       if (fuelTypeData) {
         perFuelTypeData.unshift({
-          dataFile: dateData.data_file, price: fuelTypeData.price, numberOfStations: fuelTypeData.number_of_stations
+          dataFile: dateData.data_file, price: fuelTypeData.price
         });
       } else {
         perFuelTypeData.unshift(null);
@@ -91,7 +100,6 @@ function getChartData(data: Array<DailyCountryData>): ChartData {
       dataPerFuelType.set(fuelType, perFuelTypeData);
     }
   }
-
   // Remove fuel type data if they are empty
   dataPerFuelType.forEach((value, key) => {
     if (value.filter(function (el) {
@@ -100,13 +108,6 @@ function getChartData(data: Array<DailyCountryData>): ChartData {
       dataPerFuelType.delete(key);
     }
   });
-
-  console.log(Array.from(dataPerFuelType, function ([fuelType, data]) {
-    return {
-      label: Constants.fuelTypeDescription(fuelType),
-      data: data.map(e => { return e?.price })
-    };
-  }));
 
   return {
     labels: labels,
@@ -119,19 +120,20 @@ function getChartData(data: Array<DailyCountryData>): ChartData {
   };
 }
 
-watch(props, async () => {
+watch([props, route], async () => {
   const [startDate, endDate] = props.dateRange;
-  if (!startDate || !endDate) {
+  const prefecture = route.params.prefecture;
+  if (!startDate || !endDate || !prefecture || Array.isArray(prefecture)) {
     return;
   }
-  API.dailyCountryData(startDate, endDate).then(data => {
+  API.dailyPrefectureData(prefecture, startDate, endDate).then(data => {
     chartData.value = getChartData(data);
   });
 });
 </script>
 
 <template>
-  <h2>Ημερήσια δεδομένα</h2>
+  <h2>Ημερήσια δεδομένα για {{ Constants.prefectureDescription($route.params.prefecture) }}</h2>
   <div class="chart">
     <Line :data="chartData" :options="chartOptions"/>
   </div>
