@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import DailyCountryData from '../components/DailyCountryData.vue';
-import DailyPrefectureData from '../components/DatePrefectureData.vue';
+import DailyCountryData from '@/components/DailyCountryData.vue';
+import DailyPrefectureData from '@/components/DatePrefectureData.vue';
 
-defineProps(['selectedDates']);
+defineProps(['dateRange']);
 
 </script>
 
 <template>
   <div>
-    <DailyCountryData :selectedDates="selectedDates" />
+    <DailyCountryData :dateRange="dateRange" />
   </div>
   <div>
-    <DailyPrefectureData :date="selectedDates[1]" />
+    <DailyPrefectureData :date="dateRange[1]" />
   </div>
 </template>

@@ -4,15 +4,10 @@ import {RouterView} from 'vue-router'
 
 import {VueDatePicker} from '@vuepic/vue-datepicker';
 
-import {API, type DateRange} from './services/api.ts';
+import {API} from '@/services/api.ts';
 
-/** The date range for the date picker */
-const dateRange = ref<DateRange>({
-  startDate: null,
-  endDate: null
-});
 /** The selected dates from the date picker **/
-const selectedDates = ref<[Date, Date] | []>([]);
+const dateRange = ref<[Date, Date] | []>([]);
 
 /**
  * Called when the component is mounted. Gets the date range for the date picker and sets the default dates to display
@@ -20,11 +15,10 @@ const selectedDates = ref<[Date, Date] | []>([]);
 onMounted(() => {
   API.dateRange('daily_country').then(data => {
     // Set the date range for the date picker
-    dateRange.value = { startDate: data.startDate, endDate: data.endDate }
     if (data.startDate && data.endDate) {
       let startDate = new Date(data.endDate);
       startDate.setMonth(startDate.getMonth() - 3);
-      selectedDates.value = [startDate, data.endDate];
+      dateRange.value = [startDate, data.endDate];
     }
   });
 });
@@ -34,11 +28,11 @@ onMounted(() => {
   <main>
     <h1>Τιμές Καυσίμων</h1>
     <div>
-      <VueDatePicker v-model="selectedDates" range multi-calendars :min-date="dateRange.startDate || ''"
-                     :max-date="dateRange.endDate || ''" :time-config="{enableTimePicker: false}"
+      <VueDatePicker v-model="dateRange" range multi-calendars :min-date="dateRange[0] || ''"
+                     :max-date="dateRange[1] || ''" :time-config="{enableTimePicker: false}"
                      :formats="{ input: 'dd MMM yyyy' }"/>
     </div>
-    <RouterView :selectedDates="selectedDates" />
+    <RouterView :dateRange="dateRange" />
   </main>
 </template>
 

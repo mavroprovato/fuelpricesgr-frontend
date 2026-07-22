@@ -14,7 +14,7 @@ import {Formatter} from "@/services/formatter.ts";
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Colors);
 
-const props = defineProps(['selectedDates']);
+const props = defineProps(['dateRange']);
 
 const chartOptions: any = ref({
   responsive: true,
@@ -108,8 +108,7 @@ function getChartData(data: Array<DailyCountryData>): ChartData {
 }
 
 watch(props, async () => {
-  console.log("WATCH!")
-  const [startDate, endDate] = props.selectedDates;
+  const [startDate, endDate] = props.dateRange;
   if (!startDate || !endDate) {
     return;
   }
