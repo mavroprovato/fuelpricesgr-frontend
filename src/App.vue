@@ -4,7 +4,13 @@ import {RouterView} from 'vue-router'
 
 import {VueDatePicker} from '@vuepic/vue-datepicker';
 
-import {API} from '@/services/api.ts';
+import {API, type DateRange} from '@/services/api.ts';
+
+/** The available dates */
+const availableDates = ref<DateRange>({
+  startDate: null,
+  endDate: null
+});
 
 /** The selected dates from the date picker **/
 const dateRange = ref<[Date, Date] | []>([]);
@@ -28,8 +34,8 @@ onMounted(() => {
   <main>
     <h1>Τιμές Καυσίμων</h1>
     <div>
-      <VueDatePicker v-model="dateRange" range multi-calendars :min-date="dateRange[0] || ''"
-                     :max-date="dateRange[1] || ''" :time-config="{enableTimePicker: false}"
+      <VueDatePicker v-model="dateRange" range multi-calendars :min-date="availableDates.startDate || ''"
+                     :max-date="availableDates.endDate || ''" :time-config="{enableTimePicker: false}"
                      :formats="{ input: 'dd MMM yyyy' }"/>
     </div>
     <RouterView :dateRange="dateRange" />
