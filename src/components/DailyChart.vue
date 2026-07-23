@@ -7,14 +7,20 @@ import {
 } from 'chart.js'
 import 'chartjs-adapter-moment';
 
-import {API, type CountryData, type DailyCountryData} from "@/services/api.ts";
+import {
+  API,
+  type CountryData,
+  type DailyCountryData,
+  type DailyPrefectureData,
+  type PrefectureData
+} from "@/services/api.ts";
 import {Constants} from "@/services/constants.ts";
 import {Formatter} from "@/services/formatter.ts";
 
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Colors);
 
-const props = defineProps(['dateRange']);
+const props = defineProps(['type', 'dateRange', 'prefecture']);
 
 const chartOptions: any = ref({
   responsive: true,
@@ -23,7 +29,6 @@ const chartOptions: any = ref({
     mode: 'index',
     intersect: false,
   },
-  locale: 'el-GR',
   scales: {
     x: {
       type: 'time',
@@ -72,22 +77,20 @@ const chartData = ref<ChartData>({
   datasets: []
 });
 
-function getChartData(data: Array<DailyCountryData>): ChartData {
+function getChartData(data: Array<DailyCountryData | DailyPrefectureData>): ChartData {
   // Get the data per fuel type
   const labels: Date[] = [];
-  const dataPerFuelType: Map<string, (any | null)[]> = new Map();
+  const dataPerFuelType: Map<string, any[]> = new Map();
   for (const dateData of data) {
     labels.unshift(dateData.date);
     for (const fuelType of Constants.fuelTypes()) {
-      const fuelTypeData = dateData.data.find((e: CountryData) => e.fuel_type === fuelType);
+      const fuelTypeData = dateData.data.find((e: CountryData | PrefectureData) => e.fuel_type === fuelType);
       const perFuelTypeData = dataPerFuelType.get(fuelType) || [];
+      let rowData = null;
       if (fuelTypeData) {
-        perFuelTypeData.unshift({
-          dataFile: dateData.data_file, price: fuelTypeData.price, numberOfStations: fuelTypeData.number_of_stations
-        });
-      } else {
-        perFuelTypeData.unshift(null);
+        rowData = { data_file: dateData.data_file, price: fuelTypeData.price };
       }
+      perFuelTypeData.unshift(rowData);
       dataPerFuelType.set(fuelType, perFuelTypeData);
     }
   }
@@ -112,27 +115,33 @@ function getChartData(data: Array<DailyCountryData>): ChartData {
   };
 }
 
-function loadChart() {
+function loadData() {
   const [startDate, endDate] = props.dateRange;
   if (!startDate || !endDate) {
     return;
   }
-  API.dailyCountryData(startDate, endDate).then(data => {
-    chartData.value = getChartData(data);
-  });
+  if (props.type == 'country') {
+    API.dailyCountryData(startDate, endDate).then(data => {
+      chartData.value = getChartData(data);
+    });
+  } else if (props.type == 'prefecture') {
+    API.dailyPrefectureData(props.prefecture, startDate, endDate).then(data => {
+      chartData.value = getChartData(data);
+    });
+  }
 }
 
 onMounted(() => {
-  loadChart();
+  loadData();
 });
 
 watch(props, async () => {
-  loadChart();
+  loadData();
 });
 </script>
 
 <template>
-  <h2>Ημερήσια δεδομένα</h2>
+  <h2>Ημερήσια δεδομένα <span v-if="type=='prefecture'">για νομό {{ Constants.prefectureDescription(prefecture) }}</span></h2>
   <div class="chart">
     <Line :data="chartData" :options="chartOptions"/>
   </div>

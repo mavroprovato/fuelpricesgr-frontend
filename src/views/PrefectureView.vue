@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import DailyPrefectureChart from "@/components/DailyPrefectureChart.vue";
+import {ref} from "vue";
+import {useRoute} from "vue-router";
+
+import DailyChart from "@/components/DailyChart.vue";
+
+const route = useRoute();
+const prefecture = ref(route.params.prefecture)
 
 defineProps(['dateRange']);
+
 </script>
 
 <template>
   <div>
-    <DailyPrefectureChart :dateRange="dateRange"/>
+    <DailyChart :dateRange="dateRange" :prefecture="prefecture" type="prefecture"/>
   </div>
 </template>

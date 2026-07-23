@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import DailyCountryChart from '@/components/DailyCountryChart.vue';
+
+import DailyChart from "@/components/DailyChart.vue";
 import PrefectureTable from '@/components/PrefectureTable.vue';
 
 defineProps(['dateRange']);
@@ -8,7 +9,7 @@ defineProps(['dateRange']);
 
 <template>
   <div>
-    <DailyCountryChart :dateRange="dateRange" />
+    <DailyChart :dateRange="dateRange" type="country" />
   </div>
   <div>
     <PrefectureTable :date="dateRange[1]" />
