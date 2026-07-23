@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watch} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {Line} from 'vue-chartjs'
 import moment from 'moment';
 import {
@@ -101,13 +101,6 @@ function getChartData(data: Array<DailyCountryData>): ChartData {
     }
   });
 
-  console.log(Array.from(dataPerFuelType, function ([fuelType, data]) {
-    return {
-      label: Constants.fuelTypeDescription(fuelType),
-      data: data.map(e => { return e?.price })
-    };
-  }));
-
   return {
     labels: labels,
     datasets: Array.from(dataPerFuelType, function ([fuelType, data]) {
@@ -119,7 +112,7 @@ function getChartData(data: Array<DailyCountryData>): ChartData {
   };
 }
 
-watch(props, async () => {
+function loadChart() {
   const [startDate, endDate] = props.dateRange;
   if (!startDate || !endDate) {
     return;
@@ -127,6 +120,14 @@ watch(props, async () => {
   API.dailyCountryData(startDate, endDate).then(data => {
     chartData.value = getChartData(data);
   });
+}
+
+onMounted(() => {
+  loadChart();
+});
+
+watch(props, async () => {
+  loadChart();
 });
 </script>
 

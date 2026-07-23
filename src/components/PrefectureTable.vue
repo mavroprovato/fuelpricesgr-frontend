@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import moment from 'moment';
 import {API} from "@/services/api.ts";
 import {Constants} from "@/services/constants.ts";
@@ -10,7 +10,7 @@ const props = defineProps(['date']);
 const fuelTypes = ref();
 const prefectureData = ref();
 
-watch(props, async () => {
+function loadData() {
   const [startDate, endDate] = [props.date, props.date];
   API.dailyPrefectureData(undefined, startDate, endDate).then(data => {
     const dataPerPrefecture = new Map();
@@ -35,6 +35,14 @@ watch(props, async () => {
     }
     prefectureData.value = tableData;
   });
+}
+
+onMounted(() => {
+  loadData();
+});
+
+watch(props, async () => {
+  loadData();
 });
 </script>
 

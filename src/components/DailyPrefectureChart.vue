@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {ref, watch} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {useRoute} from "vue-router";
 import {Line} from 'vue-chartjs'
 import moment from 'moment';
@@ -11,8 +11,6 @@ import {
 import 'chartjs-adapter-moment';
 import {
   API,
-  type CountryData,
-  type DailyCountryData,
   type DailyPrefectureData,
   type PrefectureData
 } from "@/services/api.ts";
@@ -120,7 +118,7 @@ function getChartData (data: Array<DailyPrefectureData>): ChartData {
   };
 }
 
-watch([props, route], async () => {
+function loadData() {
   const [startDate, endDate] = props.dateRange;
   const prefecture = route.params.prefecture;
   if (!startDate || !endDate || !prefecture || Array.isArray(prefecture)) {
@@ -129,6 +127,14 @@ watch([props, route], async () => {
   API.dailyPrefectureData(prefecture, startDate, endDate).then(data => {
     chartData.value = getChartData(data);
   });
+}
+
+onMounted(async () => {
+  loadData();
+})
+
+watch(props, async () => {
+  loadData();
 });
 </script>
 
