@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import PrefectureView from '@/views/PrefectureView.vue'
+import NotFoundView from "@/views/NotFoundView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,10 @@ const router = createRouter({
             path: '/prefecture/:prefecture',
             name: 'prefecture',
             component: PrefectureView,
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            component: NotFoundView
         }
     ]
 })
