@@ -32,7 +32,7 @@ onMounted(() => {
 
 <template>
   <main>
-    <h1>Τιμές Καυσίμων</h1>
+    <h1><RouterLink to="/">Τιμές Καυσίμων</RouterLink></h1>
     <div>
       <VueDatePicker v-model="dateRange" range multi-calendars :min-date="availableDates.startDate || ''"
                      :max-date="availableDates.endDate || ''" :time-config="{enableTimePicker: false}"
