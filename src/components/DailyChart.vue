@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {onMounted, ref, watch} from 'vue'
+import {DateTime} from 'luxon';
 import {Line} from 'vue-chartjs'
-import moment from 'moment';
 import {
   CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale, Colors
 } from 'chart.js'
-import 'chartjs-adapter-moment';
+import 'chartjs-adapter-luxon';
 
 import {
   API,
@@ -36,10 +36,7 @@ const chartOptions: any = ref({
         display: false
       },
       time: {
-        unit: 'day',
-        displayFormats: {
-          day: 'D MMM YYYY'
-        }
+        unit: 'day'
       }
     },
     y: {
@@ -56,9 +53,6 @@ const chartOptions: any = ref({
     },
     tooltip: {
       callbacks: {
-        title: function (data: any): string {
-          return moment(new Date(data[0].label)).format('D MMM YYYY');
-        },
         label: function(data: any): string {
           return `${data.dataset.label}: ${Formatter.currency(data.raw)}`;
         }
