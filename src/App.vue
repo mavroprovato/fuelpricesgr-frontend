@@ -30,14 +30,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <main>
-    <h1><RouterLink to="/">Τιμές Καυσίμων</RouterLink></h1>
+  <nav>
+    <h1>
+      <RouterLink to="/">Τιμές Καυσίμων</RouterLink>
+    </h1>
     <div>
       <VueDatePicker v-model="dateRange" range multi-calendars :min-date="availableDates[0]"
                      :max-date="availableDates[1]" :time-config="{enableTimePicker: false}"
                      :locale="el" :formats="{ input: 'dd MMMM yyyy' }"/>
     </div>
-    <RouterView :dateRange="dateRange" />
+  </nav>
+  <main>
+    <RouterView :dateRange="dateRange"/>
   </main>
 </template>
 
