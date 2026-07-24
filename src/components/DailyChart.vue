@@ -36,6 +36,11 @@ const chartOptions: any = ref({
       },
       time: {
         unit: 'day'
+      },
+      ticks: {
+        callback: function(value: Date) {
+          return Formatter.date(value, false);
+        }
       }
     },
     y: {

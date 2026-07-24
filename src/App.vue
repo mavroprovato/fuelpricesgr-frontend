@@ -2,6 +2,7 @@
 import {onMounted, ref} from 'vue'
 import {RouterView} from 'vue-router'
 
+import {el} from 'date-fns/locale'
 import {VueDatePicker} from '@vuepic/vue-datepicker';
 
 import {API} from '@/services/api.ts';
@@ -34,7 +35,7 @@ onMounted(() => {
     <div>
       <VueDatePicker v-model="dateRange" range multi-calendars :min-date="availableDates[0]"
                      :max-date="availableDates[1]" :time-config="{enableTimePicker: false}"
-                     :formats="{ input: 'dd MMM yyyy' }"/>
+                     :locale="el" :formats="{ input: 'dd MMMM yyyy' }"/>
     </div>
     <RouterView :dateRange="dateRange" />
   </main>
