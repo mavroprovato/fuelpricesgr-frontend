@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import {onMounted, ref, watch} from 'vue'
-import {DateTime} from 'luxon';
 import {Line} from 'vue-chartjs'
 import {
   CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale, Colors
 } from 'chart.js'
-import 'chartjs-adapter-luxon';
+import 'chartjs-adapter-date-fns';
 
 import {
   API,
