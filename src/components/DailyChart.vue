@@ -39,7 +39,7 @@ const chartOptions: any = ref({
       },
       ticks: {
         callback: function(value: Date) {
-          return Formatter.date(value, false);
+          return Formatter.date(value, true);
         }
       }
     },

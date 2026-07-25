@@ -9,8 +9,8 @@ export class Formatter {
         return Formatter.CURRENCY.format(value);
     }
 
-    static date(value: Date | null, year?: boolean): string {
+    static date(value: Date | null, hideYear?: boolean): string {
         if (!value) { return '' }
-        return format(value, year ? 'd MMMM yyyy': 'd MMMM', { locale: el });
+        return format(value, hideYear ? 'd MMMM' : 'd MMMM yyyy', { locale: el });
     }
 }
