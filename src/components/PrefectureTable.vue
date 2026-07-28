@@ -10,8 +10,11 @@ const fuelTypes = ref();
 const prefectureData = ref();
 
 function loadData() {
-  const [startDate, endDate] = [props.date, props.date];
-  API.dailyPrefectureData(undefined, startDate, endDate).then(data => {
+  if (!props.date) {
+    return;
+  }
+
+  API.dailyPrefectureData(undefined, props.date, props.date).then(data => {
     const dataPerPrefecture = new Map();
     const availableFuelTypes = new Set<string>();
     for (const row of data[0]?.data || []) {
