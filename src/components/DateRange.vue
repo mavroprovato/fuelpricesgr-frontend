@@ -21,12 +21,13 @@ let dateRange = ref<[Date, Date]>([new Date(), new Date()]);
 onMounted(() => {
   API.dateRange('daily_country').then(data => {
     // Set the date range for the date picker
-    if (data.startDate && data.endDate) {
-      availableDates.value = [data.startDate, data.endDate];
-      let startDate = new Date(data.endDate);
+    if (data.start_date && data.end_date) {
+      availableDates.value = [new Date(data.start_date), new Date(data.end_date)];
+      let startDate = new Date(data.end_date);
       startDate.setMonth(startDate.getMonth() - 3);
-      dateRange.value = [startDate, data.endDate];
-      emit('dateRangeChanged', [startDate, data.endDate])
+      let endDate = new Date(data.end_date);
+      dateRange.value = [startDate, endDate];
+      emit('dateRangeChanged', [startDate, endDate])
     }
   });
 });

@@ -2,15 +2,15 @@
  * The date range response data
  */
 export interface DateRange {
-    startDate: Date | null;
-    endDate: Date | null;
+    start_date: string | null;
+    end_date: string | null;
 }
 
 /**
  * The daily country response data.
  */
 export interface DailyCountryData {
-    date: Date;
+    date: string;
     data_file: string;
     data: Array<CountryData>;
 }
@@ -28,7 +28,7 @@ export interface CountryData {
  * The daily prefecture response data.
  */
 export interface DailyPrefectureData {
-    date: Date;
+    date: string;
     data_file: string;
     data: Array<PrefectureData>;
 }
@@ -53,8 +53,18 @@ interface QueryParams {
  * Error thrown when communication with the API is not available.
  */
 class APIError extends Error {
-    constructor(message: string) {
+    /** The HTTP response status */
+    public responseStatus: number | null;
+
+    /**
+     * Create the API error.
+     *
+     * @param message The error message.
+     * @param responseStatus The HTTP response status.
+     */
+    constructor(message: string, responseStatus: number | null = null) {
         super(message);
+        this.responseStatus = responseStatus;
     }
 }
 
@@ -74,10 +84,7 @@ export class API {
     static async dateRange(fuelType: string): Promise<DateRange> {
         return await API.#fetchUrl(`dateRange/${fuelType}`).then(
             async function (data: any): Promise<DateRange> {
-                return {
-                    startDate: data.start_date ? new Date(Date.parse(data.start_date)) : null,
-                    endDate: data.end_date ? new Date(Date.parse(data.end_date)) : null
-                }
+                return data;
             }
         );
     }
@@ -164,7 +171,7 @@ export class API {
         if (response?.ok) {
             return response.json();
         }
-        throw new APIError(`HTTP Response Code: ${response?.status}`);
+        throw new APIError('HTTP error', response?.status);
     }
 
     /**
