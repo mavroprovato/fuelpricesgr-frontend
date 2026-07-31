@@ -5,6 +5,7 @@ import {
   CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale, Colors
 } from 'chart.js'
 import 'chartjs-adapter-date-fns';
+import {el} from 'date-fns/locale';
 
 import {
   API,
@@ -35,11 +36,12 @@ const chartOptions: any = ref({
         display: false
       },
       time: {
-        unit: 'day'
+        unit: 'day',
+        tooltipFormat: 'MMM L'
       },
-      ticks: {
-        callback: function(value: Date) {
-          return Formatter.date(value, true);
+      adapters: {
+        date: {
+          locale: el
         }
       }
     },
