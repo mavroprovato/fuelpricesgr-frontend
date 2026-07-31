@@ -43,17 +43,37 @@ export interface PrefectureData {
 }
 
 /**
+ * Query parameters for the API.
+ */
+interface QueryParams {
+    [name: string]: string
+}
+
+/**
+ * Error thrown when communication with the API is not available.
+ */
+class APIError extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+/**
  * Gets data from the API endpoints.
  */
 export class API {
     /** The API base URL */
     static API_BASE: string = import.meta.env.VITE_API_BASE;
 
+    /**
+     * Get the date range for a fuel type.
+     *
+     * @param fuelType The fuel type.
+     * @return The date range.
+     */
     static async dateRange(fuelType: string): Promise<DateRange> {
         return await API.#fetchUrl(`dateRange/${fuelType}`).then(
-            async function (response: Response): Promise<DateRange> {
-                const data = await response.json();
-
+            async function (data: any): Promise<DateRange> {
                 return {
                     startDate: data.start_date ? new Date(Date.parse(data.start_date)) : null,
                     endDate: data.end_date ? new Date(Date.parse(data.end_date)) : null
@@ -62,45 +82,89 @@ export class API {
         );
     }
 
+    /**
+     * Get the daily country data.
+     *
+     * @param startDate The start date for the data to retrieve.
+     * @param endDate The end date for the data to retrieve.
+     * @return The daily country data.
+     */
     static async dailyCountryData(
-        startDate: Date | undefined, endDate: Date | undefined
+        startDate: Date | null = null, endDate: Date | null = null
     ): Promise<Array<DailyCountryData>> {
-        const url = new URL('data/daily/country', API.API_BASE);
+        const params: QueryParams = {}
         if (startDate) {
-            url.searchParams.append('start_date', API.#toISODateString(startDate));
+            params.start_date = API.#toISODateString(startDate);
         }
         if (endDate) {
-            url.searchParams.append('end_date', API.#toISODateString(endDate));
+            params.end_date = API.#toISODateString(endDate);
         }
 
-        return await fetch(url).then(async function (response: Response): Promise<Array<DailyCountryData>> {
-            return await response.json();
-        });
+        return await API.#fetchUrl('data/daily/country', params).then(
+            async function (data: any): Promise<Array<DailyCountryData>> {
+                return data;
+            }
+        );
     }
 
+    /**
+     * Get the daily prefecture data.
+     *
+     * @param prefecture The prefecture to get the data for.
+     * @param startDate The start date for the data to retrieve.
+     * @param endDate The end date for the data to retrieve.
+     * @return The daily country data.
+     */
     static async dailyPrefectureData(
-        prefecture: string | undefined, startDate: Date | undefined, endDate: Date | undefined
+        prefecture: string | null = null, startDate: Date | null = null, endDate: Date | null = null
     ): Promise<Array<DailyPrefectureData>> {
-        const url = new URL('data/daily/prefecture', API.API_BASE);
+        const params: QueryParams = {}
         if (prefecture) {
-            url.searchParams.append('prefecture', prefecture);
+            params.prefecture = prefecture;
         }
         if (startDate) {
-            url.searchParams.append('start_date', API.#toISODateString(startDate));
+            params.start_date = API.#toISODateString(startDate);
         }
         if (endDate) {
-            url.searchParams.append('end_date', API.#toISODateString(endDate));
+            params.end_date = API.#toISODateString(endDate);
         }
 
-        return await fetch(url).then(async function (response: Response) {
-            return await response.json();
-        });
+        return await API.#fetchUrl('data/daily/prefecture', params).then(
+            async function (data: any): Promise<Array<DailyPrefectureData>> {
+                return data;
+            }
+        );
     }
 
-    static async #fetchUrl(path: string): Promise<Response> {
+    /**
+     * Fetch the data from an API URL.
+     *
+     * @param path The API path.
+     * @param params The endpoint params.
+     * @return The JSON content of the response.
+     * @throws APIError If any error occurs.
+     * @private
+     */
+    static async #fetchUrl(path: string, params: QueryParams | null = null): Promise<any> {
+        // Construct the URL
         const url = new URL(path, API.API_BASE);
-
-        return await fetch(url);
+        if (params) {
+            for (const [name, value] of Object.entries(params)) {
+                url.searchParams.append(name, value);
+            }
+        }
+        // Get the response
+        let response;
+        try {
+            response = await fetch(url);
+        } catch (error) {
+            throw new APIError('Network error');
+        }
+        // Return the data if the response is successful
+        if (response?.ok) {
+            return response.json();
+        }
+        throw new APIError(`HTTP Response Code: ${response?.status}`);
     }
 
     /**
