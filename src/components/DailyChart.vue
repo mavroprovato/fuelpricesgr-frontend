@@ -82,7 +82,7 @@ function getChartData(data: Array<DailyCountryData | DailyPrefectureData>): Char
   const labels: Date[] = [];
   const dataPerFuelType: Map<string, any[]> = new Map();
   for (const dateData of data) {
-    labels.unshift(dateData.date);
+    labels.unshift(new Date(dateData.date));
     for (const fuelType of Constants.fuelTypes()) {
       const fuelTypeData = dateData.data.find((e: CountryData | PrefectureData) => e.fuel_type === fuelType);
       const perFuelTypeData = dataPerFuelType.get(fuelType) || [];

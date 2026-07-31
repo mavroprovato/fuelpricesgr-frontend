@@ -8,12 +8,12 @@ import {API} from '@/services/api.ts';
 
 /** Declare the emitted events */
 const emit = defineEmits<{
-  (e: 'dateRangeChanged', dateRange: [Date, Date]): void
+  (e: 'dateRangeChanged', dateRange: [Date, Date] | []): void
 }>();
 /** The available dates */
 const availableDates = ref<[Date, Date] | []>([])
 /** The selected dates from the date picker **/
-let dateRange = ref<[Date, Date]>([new Date(), new Date()]);
+let dateRange = ref<[Date, Date] | []>([]);
 
 /**
  * Called when the component is mounted. Gets the date range for the date picker and sets the default dates to display
@@ -27,7 +27,7 @@ onMounted(() => {
       startDate.setMonth(startDate.getMonth() - 3);
       let endDate = new Date(data.end_date);
       dateRange.value = [startDate, endDate];
-      emit('dateRangeChanged', [startDate, endDate])
+      emit('dateRangeChanged', dateRange.value)
     }
   });
 });
