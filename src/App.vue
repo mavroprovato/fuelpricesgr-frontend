@@ -11,7 +11,7 @@ const dateRange = ref<[Date, Date] | []>([]);
  *
  * @param selectedDateRange The selected date range.
  */
-function dateRangeChanged(selectedDateRange: [Date, Date]) {
+function dateRangeChanged(selectedDateRange: [Date, Date] | []) {
   dateRange.value = selectedDateRange;
 }
 </script>
