@@ -7,12 +7,13 @@ const routes = [
     {
         path: '/',
         name: 'home',
-        component: HomeView,
+        component: HomeView
     },
     {
         path: '/prefecture/:prefecture',
         name: 'prefecture',
         component: PrefectureView,
+        props: true
     },
     {
         path: '/:pathMatch(.*)*',
