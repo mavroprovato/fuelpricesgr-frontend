@@ -2,6 +2,7 @@
 import {computed} from 'vue';
 import {useRoute} from 'vue-router';
 
+import type {DateRange} from '@/App.vue';
 import DailyChart from '@/components/DailyChart.vue';
 
 const route = useRoute();
@@ -10,7 +11,7 @@ const prefecture = computed<string>(() => {
 });
 
 defineProps<{
-  dateRange: [Date, Date] | []
+  dateRange: DateRange | []
 }>();
 
 </script>

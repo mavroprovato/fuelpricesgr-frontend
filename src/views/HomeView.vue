@@ -2,9 +2,10 @@
 
 import DailyChart from '@/components/DailyChart.vue';
 import PrefectureTable from '@/components/PrefectureTable.vue';
+import type {DateRange} from "@/App.vue";
 
 defineProps<{
-  dateRange: [Date, Date] | []
+  dateRange: DateRange
 }>();
 
 </script>

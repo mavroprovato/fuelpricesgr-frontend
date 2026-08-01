@@ -7,12 +7,9 @@ import {
 import 'chartjs-adapter-date-fns';
 import {el} from 'date-fns/locale';
 
+import type {DateRange} from '@/App.vue';
 import {
-  API,
-  type CountryData,
-  type DailyCountryData,
-  type DailyPrefectureData,
-  type PrefectureData
+  API, type CountryData, type DailyCountryData, type DailyPrefectureData, type PrefectureData
 } from '@/services/api.ts';
 import {Constants} from '@/services/constants.ts';
 import {Formatter} from '@/services/formatter.ts';
@@ -22,7 +19,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const props = defineProps<{
   type: string
-  dateRange: [Date, Date] | [],
+  dateRange: DateRange,
   prefecture?: string
 }>();
 

@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import {RouterView} from 'vue-router'
-import DateRange from '@/components/DateRange.vue';
+import DatePicker from '@/components/DatePicker.vue';
+
+/** The date range type */
+export type DateRange = [Date, Date] | [];
 
 /** The selected dates from the date picker **/
-const dateRange = ref<[Date, Date] | []>([]);
+const dateRange = ref<DateRange>([]);
 
 /**
  * Called when the date range selection has changed.
  *
  * @param selectedDateRange The selected date range.
  */
-function dateRangeChanged(selectedDateRange: [Date, Date] | []) {
+function dateRangeChanged(selectedDateRange: DateRange) {
   dateRange.value = selectedDateRange;
 }
 </script>
@@ -23,7 +26,7 @@ function dateRangeChanged(selectedDateRange: [Date, Date] | []) {
     </h1>
   </nav>
   <main>
-    <DateRange @date-range-changed="dateRangeChanged"/>
+    <DatePicker @date-range-changed="dateRangeChanged"/>
     <router-view :dateRange="dateRange"/>
   </main>
 </template>

@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
-
 import {el} from 'date-fns/locale'
 import {VueDatePicker} from '@vuepic/vue-datepicker';
 
+import type {DateRange} from '@/App.vue';
 import {API} from '@/services/api.ts';
 
 /** Declare the emitted events */
 const emit = defineEmits<{
-  (e: 'dateRangeChanged', dateRange: [Date, Date] | []): void
+  (e: 'dateRangeChanged', dateRange: DateRange): void
 }>();
 /** The available dates */
-const availableDates = ref<[Date, Date] | []>([])
+const availableDates = ref<DateRange>([])
 /** The selected dates from the date picker **/
-let dateRange = ref<[Date, Date] | []>([]);
+let dateRange = ref<DateRange>([]);
 
 /**
  * Called when the component is mounted. Gets the date range for the date picker and sets the default dates to display

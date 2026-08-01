@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref, watch} from 'vue';
+
 import {API} from '@/services/api.ts';
 import {Constants} from '@/services/constants.ts';
 import {Formatter} from '@/services/formatter.ts';
