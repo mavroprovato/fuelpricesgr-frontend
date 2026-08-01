@@ -53,7 +53,7 @@ watch(props, async () => {
 
 <template>
   <h2>Δεδομένα ανά νομό</h2>
-  <h3>Δεδομένα για {{ Formatter.date(date) }}</h3>
+  <h3>Δεδομένα για <time :datetime="Formatter.isoDate(date)">{{ Formatter.date(date) }}</time></h3>
   <table>
     <thead>
     <tr>

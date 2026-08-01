@@ -1,3 +1,5 @@
+import {Formatter} from "@/services/formatter.ts";
+
 /**
  * The date range response data
  */
@@ -101,10 +103,10 @@ export class API {
     ): Promise<Array<DailyCountryData>> {
         const params: QueryParams = {}
         if (startDate) {
-            params.start_date = API.#toISODateString(startDate);
+            params.start_date = Formatter.isoDate(startDate);
         }
         if (endDate) {
-            params.end_date = API.#toISODateString(endDate);
+            params.end_date = Formatter.isoDate(endDate);
         }
 
         return await API.#fetchUrl('data/daily/country', params).then(
@@ -130,10 +132,10 @@ export class API {
             params.prefecture = prefecture;
         }
         if (startDate) {
-            params.start_date = API.#toISODateString(startDate);
+            params.start_date = Formatter.isoDate(startDate);
         }
         if (endDate) {
-            params.end_date = API.#toISODateString(endDate);
+            params.end_date = Formatter.isoDate(endDate);
         }
 
         return await API.#fetchUrl('data/daily/prefecture', params).then(
@@ -172,16 +174,5 @@ export class API {
             return response.json();
         }
         throw new APIError('HTTP error', response?.status);
-    }
-
-    /**
-     * Formats a date to an ISO date string.
-     *
-     * @param date The date
-     * @return The ISO date string
-     * @private
-     */
-    static #toISODateString(date: Date): string {
-        return date.toISOString().split('T')[0] || '';
     }
 }

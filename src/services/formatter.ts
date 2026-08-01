@@ -19,4 +19,12 @@ export class Formatter {
 
         return format(value, hideYear ? 'd MMMM' : 'd MMMM yyyy', { locale: el });
     }
+
+    static isoDate(value?: Date): string {
+        if (!value) {
+            return ''
+        }
+
+        return format(value, 'yyyy-MM-dd');
+    }
 }
