@@ -3,24 +3,24 @@ import HomeView from '@/views/HomeView.vue'
 import PrefectureView from '@/views/PrefectureView.vue'
 import NotFoundView from "@/views/NotFoundView.vue";
 
-const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes: [
-        {
-            path: '/',
-            name: 'home',
-            component: HomeView,
-        },
-        {
-            path: '/prefecture/:prefecture',
-            name: 'prefecture',
-            component: PrefectureView,
-        },
-        {
-            path: '/:pathMatch(.*)*',
-            component: NotFoundView
-        }
-    ]
-})
+const routes = [
+    {
+        path: '/',
+        name: 'home',
+        component: HomeView,
+    },
+    {
+        path: '/prefecture/:prefecture',
+        name: 'prefecture',
+        component: PrefectureView,
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        component: NotFoundView
+    }
+];
 
-export default router
+export const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes
+});

@@ -24,7 +24,7 @@ function dateRangeChanged(selectedDateRange: [Date, Date] | []) {
   </nav>
   <main>
     <DateRange @date-range-changed="dateRangeChanged"/>
-    <RouterView :dateRange="dateRange"/>
+    <router-view :dateRange="dateRange"/>
   </main>
 </template>
 
