@@ -21,7 +21,7 @@ function dateRangeChanged(selectedDateRange: DateRange) {
 
 <template>
   <header>
-    <h1><router-link to="/">Τιμές Καυσίμων</router-link></h1>
+    <router-link to="/" title="Αρχική σελίδα"><h1>Τιμές Καυσίμων</h1></router-link>
     <date-picker @date-range-changed="dateRangeChanged"/>
   </header>
   <main>
