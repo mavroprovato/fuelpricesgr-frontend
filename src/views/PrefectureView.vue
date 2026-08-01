@@ -18,6 +18,6 @@ defineProps<{
 
 <template>
   <div>
-    <DailyChart :dateRange="dateRange" :prefecture="prefecture" type="prefecture"/>
+    <daily-chart :dateRange="dateRange" :prefecture="prefecture" type="prefecture"/>
   </div>
 </template>

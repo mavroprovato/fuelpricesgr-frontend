@@ -142,7 +142,9 @@ watch(props, async () => {
 </script>
 
 <template>
-  <h2>Ημερήσια δεδομένα <span v-if="type=='prefecture'">για νομό {{ Constants.prefectureDescription(prefecture) }}</span></h2>
+  <h2>Ημερήσια δεδομένα
+    <span v-if="type=='prefecture'">για νομό {{ Constants.prefectureDescription(prefecture) }}</span>
+  </h2>
   <div class="chart">
     <Line :data="chartData" :options="chartOptions"/>
   </div>

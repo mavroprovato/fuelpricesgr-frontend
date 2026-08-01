@@ -35,9 +35,9 @@ onMounted(() => {
 
 <template>
   <div>
-    <VueDatePicker v-model="dateRange" @update:model-value="$emit('dateRangeChanged', dateRange)" range multi-calendars
-                   :min-date="availableDates[0]" :max-date="availableDates[1]" :time-config="{enableTimePicker: false}"
-                   :locale="el" :formats="{ input: 'dd MMMM yyyy' }"/>
+    <vue-date-picker v-model="dateRange" @update:model-value="$emit('dateRangeChanged', dateRange)" range
+                     multi-calendars :min-date="availableDates[0]" :max-date="availableDates[1]"
+                     :time-config="{enableTimePicker: false}" :locale="el" :formats="{ input: 'dd MMMM yyyy' }"/>
   </div>
 </template>
 

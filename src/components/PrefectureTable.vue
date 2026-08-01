@@ -64,9 +64,9 @@ watch(props, async () => {
     <tbody>
     <tr v-for="data in prefectureData">
       <td>
-        <RouterLink :to="{ name: 'prefecture', params: { prefecture: data.name } }">
+        <router-link :to="{ name: 'prefecture', params: { prefecture: data.name } }">
           {{ Constants.prefectureDescription(data.name) }}
-        </RouterLink>
+        </router-link>
       </td>
       <td v-for="fuelType in fuelTypes">{{ Formatter.currency(data[fuelType]) }}</td>
     </tr>

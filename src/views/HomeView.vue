@@ -12,9 +12,9 @@ defineProps<{
 
 <template>
   <div>
-    <DailyChart :dateRange="dateRange" type="country" />
+    <daily-chart :dateRange="dateRange" type="country" />
   </div>
   <div>
-    <PrefectureTable :date="dateRange[1]" />
+    <prefecture-table :date="dateRange[1]" />
   </div>
 </template>
