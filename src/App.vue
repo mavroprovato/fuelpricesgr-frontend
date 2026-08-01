@@ -20,13 +20,11 @@ function dateRangeChanged(selectedDateRange: DateRange) {
 </script>
 
 <template>
-  <nav>
-    <h1>
-      <router-link to="/">Τιμές Καυσίμων</router-link>
-    </h1>
-  </nav>
-  <main>
+  <header>
+    <h1><router-link to="/">Τιμές Καυσίμων</router-link></h1>
     <date-picker @date-range-changed="dateRangeChanged"/>
+  </header>
+  <main>
     <router-view :dateRange="dateRange"/>
   </main>
 </template>
