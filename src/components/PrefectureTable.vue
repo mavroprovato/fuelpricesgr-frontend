@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import {onMounted, ref, watch} from "vue";
-import {API} from "@/services/api.ts";
-import {Constants} from "@/services/constants.ts";
-import {Formatter} from "@/services/formatter.ts";
+import {API} from '@/services/api.ts';
+import {Constants} from '@/services/constants.ts';
+import {Formatter} from '@/services/formatter.ts';
 
-const props = defineProps(['date']);
+const props = defineProps<{
+  date?: Date
+}>();
 
 const fuelTypes = ref();
 const prefectureData = ref();

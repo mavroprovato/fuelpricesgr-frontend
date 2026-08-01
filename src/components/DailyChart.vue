@@ -13,14 +13,18 @@ import {
   type DailyCountryData,
   type DailyPrefectureData,
   type PrefectureData
-} from "@/services/api.ts";
-import {Constants} from "@/services/constants.ts";
-import {Formatter} from "@/services/formatter.ts";
+} from '@/services/api.ts';
+import {Constants} from '@/services/constants.ts';
+import {Formatter} from '@/services/formatter.ts';
 
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Colors);
 
-const props = defineProps(['type', 'dateRange', 'prefecture']);
+const props = defineProps<{
+  type: string
+  dateRange: [Date, Date] | [],
+  prefecture?: string
+}>();
 
 const chartOptions: any = ref({
   responsive: true,

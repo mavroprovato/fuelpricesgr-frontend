@@ -76,15 +76,23 @@ export class Constants {
         return Array.from(Constants.FUEL_TYPES, (fuelType) => fuelType.name);
     }
 
-    static fuelTypeDescription(fuelType: string) : string | undefined {
-        return Constants.FUEL_TYPES.find((e: FuelType) => e.name === fuelType)?.description
+    static fuelTypeDescription(fuelType?: string) : string {
+        if (!fuelType) {
+            return '';
+        }
+
+        return Constants.FUEL_TYPES.find((e: FuelType) => e.name === fuelType)?.description || '';
     }
 
     static prefectures(): Array<string> {
         return Array.from(Constants.PREFECTURES, (prefecture) => prefecture.name);
     }
 
-    static prefectureDescription(prefecture: string) : string | undefined {
-        return Constants.PREFECTURES.find((e: Prefecture) => e.name === prefecture)?.description
+    static prefectureDescription(prefecture?: string) : string {
+        if (!prefecture) {
+            return '';
+        }
+
+        return Constants.PREFECTURES.find((e: Prefecture) => e.name === prefecture)?.description || '';
     }
 }

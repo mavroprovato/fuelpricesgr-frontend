@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import {ref} from "vue";
-import {useRoute} from "vue-router";
+import {computed} from 'vue';
+import {useRoute} from 'vue-router';
 
-import DailyChart from "@/components/DailyChart.vue";
+import DailyChart from '@/components/DailyChart.vue';
 
 const route = useRoute();
-const prefecture = ref(route.params.prefecture)
+const prefecture = computed<string>(() => {
+  return String(route.params.prefecture);
+});
 
-defineProps(['dateRange']);
+defineProps<{
+  dateRange: [Date, Date] | []
+}>();
 
 </script>
 

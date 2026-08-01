@@ -1,9 +1,11 @@
 <script setup lang="ts">
 
-import DailyChart from "@/components/DailyChart.vue";
+import DailyChart from '@/components/DailyChart.vue';
 import PrefectureTable from '@/components/PrefectureTable.vue';
 
-defineProps(['dateRange']);
+defineProps<{
+  dateRange: [Date, Date] | []
+}>();
 
 </script>
 
