@@ -58,7 +58,7 @@ export class Constants {
         { name: 'XANTHI', description: "Ξάνθης"},
         { name: 'PELLA', description: "Πέλλης"},
         { name: 'PIERIA', description: "Πιερίας"},
-        { name: 'PREVEZA', description: "Πρεβέζηε"},
+        { name: 'PREVEZA', description: "Πρεβέζης"},
         { name: 'RETHYMNO', description: "Ρεθύμνης"},
         { name: 'RHODOPE', description: "Ροδόπης"},
         { name: 'SAMOS', description: "Σάμου"},

@@ -27,6 +27,7 @@ function dateRangeChanged(selectedDateRange: DateRange) {
   <main>
     <router-view :dateRange="dateRange"/>
   </main>
+  <footer>©Copyright 2021-2026 by Kostas Kokkoros</footer>
 </template>
 
 <style scoped>
