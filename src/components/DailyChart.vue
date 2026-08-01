@@ -38,7 +38,10 @@ const chartOptions: any = ref({
       },
       time: {
         unit: 'day',
-        tooltipFormat: 'MMM L'
+        displayFormats: {
+          day: 'd MMMM'
+        },
+        tooltipFormat: 'do MMMM'
       },
       adapters: {
         date: {
