@@ -1,23 +1,20 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-import PrefectureView from '@/views/PrefectureView.vue'
-import NotFoundView from "@/views/NotFoundView.vue";
 
 const routes = [
     {
         path: '/',
         name: 'home',
-        component: HomeView
+        component: () => import('@/views/HomeView.vue'),
     },
     {
         path: '/prefecture/:prefecture',
         name: 'prefecture',
-        component: PrefectureView,
+        component: () => import('@/views/PrefectureView.vue'),
         props: true
     },
     {
         path: '/:pathMatch(.*)*',
-        component: NotFoundView
+        component: () => import('@/views/NotFoundView.vue'),
     }
 ];
 
