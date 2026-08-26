@@ -53,12 +53,12 @@ watch(props, async () => {
 
 <template>
   <h2>Δεδομένα ανά νομό</h2>
-  <h3>Δεδομένα για <time :datetime="Formatter.isoDate(date)">{{ Formatter.date(date) }}</time></h3>
   <table>
+    <caption>Δεδομένα για <time :datetime="Formatter.isoDate(date)">{{ Formatter.date(date) }}</time></caption>
     <thead>
     <tr>
       <th scope="col">Νομός</th>
-      <th v-for="fuelType in fuelTypes">{{ Constants.fuelTypeDescription(fuelType) }}</th>
+      <th v-for="fuelType in fuelTypes" scope="col">{{ Constants.fuelTypeDescription(fuelType) }}</th>
     </tr>
     </thead>
     <tbody>
