@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {onMounted, ref, watch} from 'vue';
+import {useRouter} from 'vue-router';
 
 import {API} from '@/services/api.ts';
 import {Constants} from '@/services/constants.ts';
@@ -42,6 +43,13 @@ function loadData() {
   });
 }
 
+const router = useRouter();
+
+/** Navigates to the prefecture view for the clicked row */
+function openPrefecture(prefecture: string) {
+  router.push({name: 'prefecture', params: {prefecture}});
+}
+
 onMounted(() => {
   loadData();
 });
@@ -62,7 +70,7 @@ watch(props, async () => {
     </tr>
     </thead>
     <tbody>
-    <tr v-for="data in prefectureData">
+    <tr v-for="data in prefectureData" @click="openPrefecture(data.name)">
       <td>
         <router-link :to="{ name: 'prefecture', params: { prefecture: data.name } }">
           {{ Constants.prefectureDescription(data.name) }}
@@ -73,13 +81,3 @@ watch(props, async () => {
     </tbody>
   </table>
 </template>
-
-<style scoped>
-table {
-  width: 100%;
-}
-
-th {
-  text-align: left;
-}
-</style>

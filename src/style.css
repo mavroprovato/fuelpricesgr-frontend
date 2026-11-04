@@ -1,0 +1,270 @@
+/* ------------------------------------------------------------------
+   Design tokens. Light is the default; dark applies when the OS asks
+   for a dark color scheme.
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: light dark;
+
+  --color-bg: #f5f5f3;
+  --color-text: #1c1c1e;
+  --color-muted: #6b6b70;
+  --color-accent: #3a3a3c;
+  --color-hover: #e4e4e0;
+
+  /* Chart colors (read by DailyChart.vue) */
+  --chart-text: #4a4a4f;
+  --chart-grid: #e6e6e3;
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-text: #1c1c1e;
+
+  --gutter: 16px;
+  --cell-x: 12px;
+  --max-width: 1100px;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #121212;
+    --color-text: #ececec;
+    --color-muted: #a0a0a5;
+    --color-accent: #e0e0e0;
+    --color-hover: #2a2a2e;
+
+    --chart-text: #bdbdc2;
+    --chart-grid: #2e2e32;
+    --chart-tooltip-bg: #2a2a2e;
+    --chart-tooltip-text: #ececec;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body), sans-serif;
+  line-height: 1.5;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus-visible {
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------
+   Layout
+   ------------------------------------------------------------------ */
+body > #app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+header,
+main,
+footer {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding-block: 20px;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.site-brand img {
+  flex: none;
+}
+
+/* Date picker: sized to the selected dates. Browsers without field-sizing use a fixed width. */
+header > div {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+header .dp--input {
+  width: 320px;
+  max-width: 100%;
+  text-align: right;
+}
+
+@supports (field-sizing: content) {
+  header .dp--input {
+    width: auto;
+    field-sizing: content;
+    min-width: 16ch;
+  }
+}
+
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  padding-top: 8px;
+  padding-bottom: 24px;
+}
+
+main > div {
+  min-width: 0; /* let grid items shrink to the column width */
+}
+
+main > div > h2 {
+  margin-bottom: 16px;
+}
+
+footer {
+  padding-block: 20px;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------
+   Table
+   ------------------------------------------------------------------ */
+table {
+  /* Pull the table left by one cell padding so the first column's text lines up with the headings */
+  width: calc(100% + var(--cell-x));
+  margin-left: calc(-1 * var(--cell-x));
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+caption {
+  padding: 0 var(--cell-x) 12px;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 8px var(--cell-x);
+  text-align: right;
+  white-space: nowrap;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+thead th {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+tbody tr {
+  cursor: pointer;
+}
+
+tbody tr:hover {
+  background: var(--color-hover);
+}
+
+/* ------------------------------------------------------------------
+   Date picker: neutral palette instead of the library's blue.
+   Its theme classes set --dp-* on the menu, so these selectors match
+   that specificity and load after the library CSS (see main.ts).
+   ------------------------------------------------------------------ */
+.dp--theme-light {
+  --dp-primary-color: #3a3a3c;
+  --dp-primary-text-color: #ffffff;
+  --dp-primary-disabled-color: #9a9aa0;
+  --dp-highlight-color: #3a3a3c;
+  --dp-range-between-dates-background-color: #ececea;
+  --dp-range-between-dates-text-color: #1c1c1e;
+}
+
+.dp--theme-dark {
+  --dp-primary-color: #e0e0e0;
+  --dp-primary-text-color: #121212;
+  --dp-primary-disabled-color: #6b6b70;
+  --dp-highlight-color: #e0e0e0;
+  --dp-range-between-dates-background-color: #2a2a2e;
+  --dp-range-between-dates-text-color: #ececec;
+}
+
+/* ------------------------------------------------------------------
+   Small screens
+   ------------------------------------------------------------------ */
+@media (max-width: 640px) {
+  :root {
+    --cell-x: 8px;
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  header h1 {
+    font-size: 1.3rem;
+  }
+
+  main {
+    gap: 28px;
+    padding-top: 4px;
+    padding-bottom: 16px;
+  }
+
+  th,
+  td {
+    padding-block: 6px;
+  }
+}

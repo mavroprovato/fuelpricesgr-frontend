@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
+import {onMounted, onUnmounted, ref} from 'vue';
 import {el} from 'date-fns/locale'
 import {VueDatePicker} from '@vuepic/vue-datepicker';
 
@@ -14,11 +14,19 @@ const emit = defineEmits<{
 const availableDates = ref<DateRange>([])
 /** The selected dates from the date picker **/
 let dateRange = ref<DateRange>([]);
+/** Whether the OS is using a dark color scheme */
+const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+const isDark = ref(darkQuery.matches);
+const onSchemeChange = (event: MediaQueryListEvent) => {
+  isDark.value = event.matches;
+};
 
 /**
  * Called when the component is mounted. Gets the date range for the date picker and sets the default dates to display
  */
 onMounted(() => {
+  darkQuery.addEventListener('change', onSchemeChange);
+
   API.dateRange('daily_country').then(data => {
     // Set the date range for the date picker
     if (data.start_date && data.end_date) {
@@ -31,16 +39,17 @@ onMounted(() => {
     }
   });
 });
+
+onUnmounted(() => {
+  darkQuery.removeEventListener('change', onSchemeChange);
+});
 </script>
 
 <template>
   <div>
     <vue-date-picker v-model="dateRange" @update:model-value="$emit('dateRangeChanged', dateRange)" range
                      multi-calendars :min-date="availableDates[0]" :max-date="availableDates[1]"
-                     :time-config="{enableTimePicker: false}" :locale="el" :formats="{ input: 'dd MMMM yyyy' }"/>
+                     :time-config="{enableTimePicker: false}" :locale="el" :formats="{ input: 'dd MMMM yyyy' }"
+                     :dark="isDark"/>
   </div>
 </template>
-
-<style scoped>
-
-</style>

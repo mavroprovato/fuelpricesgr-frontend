@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref, watch} from 'vue'
+import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
 import {Line} from 'vue-chartjs'
 import {
   CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip, TimeScale, Colors
@@ -23,7 +23,30 @@ const props = defineProps<{
   prefecture?: string
 }>();
 
-const chartOptions: any = ref({
+/** Reads the chart colors from the --chart-* tokens defined in style.css */
+function readChartColors() {
+  const styles = getComputedStyle(document.documentElement);
+  const color = (name: string) => styles.getPropertyValue(name).trim();
+  return {
+    text: color('--chart-text'),
+    grid: color('--chart-grid'),
+    tooltipBg: color('--chart-tooltip-bg'),
+    tooltipText: color('--chart-tooltip-text'),
+  };
+}
+
+/** Chart colors for the current color scheme */
+const chartColors = ref(readChartColors());
+
+const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+const onSchemeChange = () => {
+  // Reading computed styles forces the browser to apply the new scheme first
+  chartColors.value = readChartColors();
+};
+
+const chartOptions = computed<any>(() => {
+const colors = chartColors.value;
+return {
   responsive: true,
   maintainAspectRatio: false,
   interaction: {
@@ -35,6 +58,12 @@ const chartOptions: any = ref({
       type: 'time',
       grid: {
         display: false
+      },
+      border: {
+        color: colors.grid
+      },
+      ticks: {
+        color: colors.text
       },
       time: {
         unit: 'day',
@@ -50,7 +79,14 @@ const chartOptions: any = ref({
       }
     },
     y: {
+      grid: {
+        color: colors.grid
+      },
+      border: {
+        color: colors.grid
+      },
       ticks: {
+        color: colors.text,
         callback: function (value: number) {
           return Formatter.currency(value);
         }
@@ -59,9 +95,17 @@ const chartOptions: any = ref({
   },
   plugins: {
     legend: {
-      position: 'top'
+      position: 'top',
+      labels: {
+        color: colors.text
+      }
     },
     tooltip: {
+      backgroundColor: colors.tooltipBg,
+      titleColor: colors.tooltipText,
+      bodyColor: colors.tooltipText,
+      borderColor: colors.grid,
+      borderWidth: 1,
       callbacks: {
         label: function(data: any): string {
           return `${data.dataset.label}: ${Formatter.currency(data.raw)}`;
@@ -69,6 +113,15 @@ const chartOptions: any = ref({
       }
     }
   }
+};
+});
+
+onMounted(() => {
+  darkQuery.addEventListener('change', onSchemeChange);
+});
+
+onUnmounted(() => {
+  darkQuery.removeEventListener('change', onSchemeChange);
 });
 
 interface ChartData {
@@ -157,5 +210,11 @@ watch(props, async () => {
 .chart {
   height: 400px;
   width: 100%;
+}
+
+@media (max-width: 640px) {
+  .chart {
+    height: 280px;
+  }
 }
 </style>

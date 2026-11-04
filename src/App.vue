@@ -21,7 +21,10 @@ function dateRangeChanged(selectedDateRange: DateRange) {
 
 <template>
   <header>
-    <router-link to="/" title="Αρχική σελίδα"><h1>Τιμές Καυσίμων</h1></router-link>
+    <router-link to="/" title="Αρχική σελίδα" class="site-brand">
+      <img src="/android-chrome-192x192.png" alt="" width="36" height="36"/>
+      <h1>Τιμές Καυσίμων</h1>
+    </router-link>
     <date-picker @date-range-changed="dateRangeChanged"/>
   </header>
   <main>
@@ -29,7 +32,3 @@ function dateRangeChanged(selectedDateRange: DateRange) {
   </main>
   <footer>©Copyright 2021-2026 by Kostas Kokkoros</footer>
 </template>
-
-<style scoped>
-
-</style>
