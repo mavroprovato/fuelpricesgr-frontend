@@ -30,5 +30,5 @@ function dateRangeChanged(selectedDateRange: DateRange) {
   <main>
     <router-view :dateRange="dateRange"/>
   </main>
-  <footer>©Copyright 2021-2026 by Kostas Kokkoros</footer>
+  <footer>©Copyright 2021-2026 by <a href="https://www.mavroprovato.net">Kostas Kokkoros</a></footer>
 </template>
