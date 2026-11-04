@@ -49,6 +49,7 @@ onUnmounted(() => {
   <div>
     <vue-date-picker v-model="dateRange" @update:model-value="$emit('dateRangeChanged', dateRange)" range
                      multi-calendars :min-date="availableDates[0]" :max-date="availableDates[1]"
+                     prevent-min-max-navigation
                      :time-config="{enableTimePicker: false}" :locale="el" :formats="{ input: 'dd MMMM yyyy' }"
                      :dark="isDark"/>
   </div>
