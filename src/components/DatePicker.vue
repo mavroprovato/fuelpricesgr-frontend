@@ -32,7 +32,7 @@ onMounted(() => {
     if (data.start_date && data.end_date) {
       availableDates.value = [new Date(data.start_date), new Date(data.end_date)];
       let startDate = new Date(data.end_date);
-      startDate.setMonth(startDate.getMonth() - 1);
+      startDate.setFullYear(startDate.getFullYear() - 1);
       let endDate = new Date(data.end_date);
       dateRange.value = [startDate, endDate];
       emit('dateRangeChanged', dateRange.value)
