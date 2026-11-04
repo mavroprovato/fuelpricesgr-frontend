@@ -53,6 +53,14 @@ return {
     mode: 'index',
     intersect: false,
   },
+  elements: {
+    point: {
+      radius: 0,
+    },
+    line: {
+      tension: 0.35,
+    },
+  },
   scales: {
     x: {
       type: 'time',
