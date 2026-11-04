@@ -5,16 +5,21 @@ import PrefectureTable from '@/components/PrefectureTable.vue';
 import type {DateRange} from "@/App.vue";
 
 defineProps<{
-  dateRange: DateRange
+  dateRange: DateRange,
+  tableDate?: Date
+}>();
+
+defineEmits<{
+  dateSelected: [date: Date]
 }>();
 
 </script>
 
 <template>
   <div>
-    <daily-chart :dateRange="dateRange" type="country" />
+    <daily-chart :dateRange="dateRange" type="country" @date-selected="$emit('dateSelected', $event)" />
   </div>
   <div>
-    <prefecture-table :date="dateRange[1]" />
+    <prefecture-table :date="tableDate" />
   </div>
 </template>

@@ -23,6 +23,10 @@ const props = defineProps<{
   prefecture?: string
 }>();
 
+const emit = defineEmits<{
+  dateSelected: [date: Date]
+}>();
+
 /** Reads the chart colors from the --chart-* tokens defined in style.css */
 function readChartColors() {
   const styles = getComputedStyle(document.documentElement);
@@ -52,6 +56,14 @@ return {
   interaction: {
     mode: 'index',
     intersect: false,
+  },
+  onClick: (_event: any, elements: any[], chart: any) => {
+    if (elements.length > 0) {
+      const date = chart.data.labels[elements[0].index];
+      if (date) {
+        emit('dateSelected', date);
+      }
+    }
   },
   elements: {
     point: {
